@@ -1,33 +1,26 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import {Routes, Route} from "react-router-dom"
+import Home from './components/Home'
+import Account from './components/Account'
+import Login from './components/Login'
+import NavBar from './components/NavBar'
+import Game from './components/Game'
+import Register from './components/Register'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [token, setToken] = useState(null);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <NavBar token={token} setToken={setToken}/>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/account" element={<Account/>}/>
+        <Route path="/login" element={<Login setToken={setToken}/>}/>
+        <Route path="/register" element={<Register setToken={setToken}/>}/>
+        <Route path="/game" element={<Game/>}/>
+      </Routes>
     </>
   )
 }
