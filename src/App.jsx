@@ -6,6 +6,7 @@ import Login from './components/Login'
 import NavBar from './components/NavBar'
 import Game from './components/Game'
 import Register from './components/Register'
+import Slider from './components/Slider'
 import './App.css'
 
 function App() {
