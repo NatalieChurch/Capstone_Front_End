@@ -3,32 +3,34 @@ import { saveToken } from "./Auth";
 import { useNavigate } from "react-router-dom";
 
 export default function Register({ setToken }) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
     try {
       const response = await fetch("http://localhost:3000/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-      
-      if (data) {
-        setSuccessMessage("User successfully created")
-        saveToken(data, setToken);
-        navigate("/");
-      } else {
-        setErrorMessage("Registration failed.");
+      const data = await response.json(); 
+
+      if (!response.ok) {
+        setErrorMessage(typeof data === "string" ? data : "Registration failed.");
+        return;
       }
+
+      setSuccessMessage("User successfully created");
+      saveToken(data, setToken);            
+      navigate("/");
     } catch (err) {
-      setErrorMessage("An error occurred. Please try again.");
+      setErrorMessage("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -38,8 +40,8 @@ export default function Register({ setToken }) {
       <input
         type="email"
         placeholder="Email"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         required
       />
       <input
@@ -51,7 +53,7 @@ export default function Register({ setToken }) {
       />
       <button type="submit">Register</button>
       {successMessage && <p>{successMessage}</p>}
-      {errorMessage && <p>{errorMessage}</p>}
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     </form>
   );
 }
