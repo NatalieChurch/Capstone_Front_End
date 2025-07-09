@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
 
@@ -9,7 +10,7 @@ const slides = [
     subtitle: 'Ready To Play Blackjack?',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     button: 'Start Playing',
-    link: '#section-1',
+    link: '/game',
   },
   {
     id: 2,
@@ -17,7 +18,7 @@ const slides = [
     subtitle: 'Register Or Login',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     button: 'Register',
-    link: '#section-2',
+    link: '/register',
   },
   {
     id: 3,
@@ -33,7 +34,7 @@ const slides = [
         "5. Determine the winner."
     ],
     button: 'Ready To Try It Yourself?',
-    link: '#section-3',
+    link: '/game',
   },
   {
     id: 4,
@@ -47,6 +48,7 @@ const slides = [
 
 export default function Slider() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -100,9 +102,11 @@ export default function Slider() {
 
                 <div className="line" />
 
-                {slide.button && (
-                  <div className="learn-more-button">
-                    <a href={slide.link}>{slide.button}</a>
+                {slide.button && slide.link && (
+                  <div className="homepage-button">
+                      <button onClick={() => navigate(slide.link)}>
+                        {slide.button}
+                      </button>
                   </div>
                 )}
               </div>
