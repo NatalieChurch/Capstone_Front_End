@@ -289,6 +289,8 @@ a {
   justify-content: center;
   align-items: center;
   text-align: center;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* Active slide on the screen for the 5 second interval */
@@ -296,7 +298,8 @@ a {
   left: 0;
   top: 0;
   opacity: 1 !important;
-  z-index: 9999 ;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 /* The sliding homepage banners. Added margin-bottom to make sure the buttons were fully visible */
@@ -306,8 +309,11 @@ a {
   padding: 2rem;
   border-radius: 12px;
   max-width: 100vh;
+  max-height: 90vh;
+  overflow: hidden;
   margin-bottom: 100px;
   color: #fff;
+  position: relative;
 }
 
 /* The same as Section 1 */
@@ -398,13 +404,20 @@ a {
   background: var(--main-color);
 }
 
-/* #section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button {
+/* #section-1 .content-slider .slider .banner .banner-inner-wrapper .homepage-button {
   padding-bottom: 5em;
   z-index: 15 !important;
 } */
 
+/* Sliding banner buttons */
+.homepage-button {
+  z-index: 3;
+  position: relative;
+  pointer-events: auto;
+}
+
 /* Button styling for home page sliding banners */
-#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button a {
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .homepage-button a {
   padding: 0.5em 2em;
   text-align: center;
   font-family: var(--main-font);
@@ -414,7 +427,7 @@ a {
   border: 0.1875em solid var(--main-color);
 }
 
-/* #section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button a:hover {
+/* #section-1 .content-slider .slider .banner .banner-inner-wrapper .homepage-button a:hover {
   color: #7B1414;
   border-color: #7B1414;
   transition: .3s;
@@ -445,7 +458,7 @@ a {
   position: absolute;
   bottom: 0.5em;
   width: 100%;
-  z-index: 10;
+  z-index: 20;
   text-align: center;
 }
 
