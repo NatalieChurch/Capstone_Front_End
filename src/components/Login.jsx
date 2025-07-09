@@ -20,11 +20,11 @@ export default function Login({ setToken }) {
 
       const data = await response.json();                 
       if (!response.ok) {
-        setMessage(typeof data === "string" ? data : "Login failed.");
+        setMessage(data.error ? data : "Login failed.");
         return;
       }
 
-      saveToken(data, setToken);     
+      saveToken(data.token, setToken);     
       navigate("/");
     } catch (err) {
       setMessage("An unexpected error occurred. Please try again.");

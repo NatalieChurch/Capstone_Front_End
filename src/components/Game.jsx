@@ -387,9 +387,11 @@ async function newHand(){
           <div className="controls" style={{ gap: "0.5rem" }}>
             <button onClick={hit}>Hit</button>
             <button onClick={stand}>Stand</button>
-            <button onClick={split} disabled={!canSplit()}>
-              Split
-            </button>
+            {canSplit() && (
+              <button onClick={split}>
+                 Split
+              </button>
+            )}
           </div>
         )}
 
