@@ -8,11 +8,16 @@ const API = "http://localhost:3000";
 const cleanRank = (rank) => rank.split(":")[0];
 const isAce = (rank) => cleanRank(rank) === "A";
 const sameRank = (r1, r2) => cleanRank(r1) === cleanRank(r2);
-
 const authHeaders = (token) => ({
   "Content-Type": "application/json",
   Authorization: `Bearer ${token}`,
 });
+const STRATEGY_MAP = {
+  H: "Hit",
+  S: "Stand",
+  D: "Double Down Baby",
+  P: "Split",
+};
 
 export default function Game() {
   const navigate = useNavigate();
@@ -25,6 +30,8 @@ export default function Game() {
   const [message, setMessage] = useState("");
   const [revealDealerHole, setRevealDealerHole] = useState(false);
   const [gameNeedsReset, setGameNeedsReset] = useState(false);
+  const [handType, setHandType] = useState(null)
+  const [strategy, setStrategy] = useState(null)
 
   const total = (hand) => {
     let sum = hand.reduce((s, c) => s + c.card_value, 0);
@@ -48,6 +55,7 @@ export default function Game() {
     setActiveHandIdx(0);
     setMessage("");
     setRevealDealerHole(false);
+    setStrategy(null)
   };
 
   const currentHand = () => playerHands[activeHandIdx] || [];
@@ -56,6 +64,19 @@ export default function Game() {
     currentHand().length === 2 &&
     sameRank(currentHand()[0].rank, currentHand()[1].rank) &&
     playerHands.length === 1;
+  
+  function updateHandType(hand) {
+    if (hand.length === 2 && sameRank(hand[0].rank, hand[1].rank)) {
+      setHandType("pair");
+    } else {
+      const ranks = hand.map(card => card.rank);
+      if (ranks.includes("A")) {
+        setHandType("soft");
+      } else {
+        setHandType("hard");
+      }
+    }
+    }
   
   async function checkShoe(){
     const shoe = await fetchJson(`${API}/shoe`)
@@ -100,7 +121,10 @@ async function startGame() {
             method: "POST",
             headers: authHeaders(token),
           });
-          setPlayerHands((prev) => [[...prev[0], p2]]);
+          
+          const newPlayerHand = [p1, p2];
+          setPlayerHands([newPlayerHand]);
+          updateHandType(newPlayerHand)
 
           setTimeout(async () => {
             const d2 = await fetchJson(`${API}/hand/dealer`, {
@@ -122,14 +146,23 @@ async function startGame() {
 }
 
   const hit = async () => {
+    setStrategy(null)
     try {
       const handNum = activeHandIdx + 1;
       const card = await fetchJson(`${API}/hand/player?hand=${handNum}`, {
         method: "POST",
         headers: authHeaders(token),
       });
-      setPlayerHands((hands) =>
-        hands.map((h, i) => (i === activeHandIdx ? [...h, card] : h))
+
+  setPlayerHands((hands) =>
+        hands.map((h, i) => {
+          if (i === activeHandIdx) {
+            const newHand = [...h, card];
+            updateHandType(newHand); 
+            return newHand;
+          }
+          return h;
+        })
       );
 
       if (total([...currentHand(), card]) > 21) {
@@ -242,7 +275,10 @@ async function newHand(){
               method: "POST",
               headers: authHeaders(token),
             });
-            setPlayerHands((prev) => [[...prev[0], p2]]);
+
+            const newPlayerHand = [p1, p2];
+            setPlayerHands([newPlayerHand]);
+            updateHandType(newPlayerHand)
 
             setTimeout(async () => {
               const d2 = await fetchJson(`${API}/hand/dealer`, {
@@ -264,6 +300,24 @@ async function newHand(){
   };
 
 
+    async function getStrategy(hand){
+        const handTotal = String(total(hand))
+        const dealerUpcard = dealerHand[1]
+
+        const response = await fetchJson(`${API}/strategy`, {
+        method: "POST",
+        headers: authHeaders(token),
+        body: JSON.stringify({ 
+          players_hand : handTotal,
+          dealers_upcard : ["J", "Q", "K"].includes(dealerUpcard.rank) ? "10" : dealerUpcard.rank,
+          hand_type : handType
+        })
+      });
+      const strategy = response[0].recc_action
+      setStrategy(strategy)
+    }
+
+
 
   useEffect(() => {
     if (!token) navigate("/login");
@@ -276,18 +330,15 @@ async function newHand(){
     <h2>Blackjack!</h2>
 
     {gameNeedsReset ? (
-      // Show deck low message + start new game button
       <div>
         <p>Deck is low, please start a new game</p>
         <button onClick={startGame}>Start New Game</button>
       </div>
     ) : !gameStarted && playerHands.length === 0 ? (
-      // Initial start button when no game started & no hands yet
       <button disabled={loading} onClick={startGame}>
         {loading ? "Starting…" : "Start"}
       </button>
     ) : (
-      // Game in progress or finished but no deck issue
       <>
         <section>
           <h3>Dealer</h3>
@@ -320,7 +371,14 @@ async function newHand(){
                   </li>
                 ))}
               </ul>
+              
               <p>Total: {total(hand)}</p>
+              <button onClick={()=>getStrategy(hand)}>Get Strategy</button>
+              
+                {strategy && idx === activeHandIdx && (
+                    <p><strong>Recommended Action:</strong> {STRATEGY_MAP[strategy]}</p>
+                )}
+
             </div>
           ))}
         </section>
@@ -335,7 +393,6 @@ async function newHand(){
           </div>
         )}
 
-        {/* Show message and Play Another Hand button only if game finished and hands exist */}
         {!gameStarted && playerHands.length > 0 && (
           <div style={{ marginTop: "1rem" }}>
             {message && <p>{message}</p>}
