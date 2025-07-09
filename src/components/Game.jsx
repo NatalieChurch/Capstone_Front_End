@@ -14,7 +14,6 @@ const authHeaders = (token) => ({
   Authorization: `Bearer ${token}`,
 });
 
-
 export default function Game() {
   const navigate = useNavigate();
   const [token] = useState(getToken());
@@ -24,6 +23,7 @@ export default function Game() {
   const [activeHandIdx, setActiveHandIdx] = useState(0);
   const [dealerHand, setDealerHand] = useState([]);
   const [message, setMessage] = useState("");
+  const [revealDealerHole, setRevealDealerHole] = useState(false);
 
   const total = (hand) => {
     let sum = hand.reduce((s, c) => s + c.card_value, 0);
@@ -46,6 +46,7 @@ export default function Game() {
     setDealerHand([]);
     setActiveHandIdx(0);
     setMessage("");
+    setRevealDealerHole(false);
   };
 
   const currentHand = () => playerHands[activeHandIdx] || [];
@@ -53,42 +54,53 @@ export default function Game() {
   const canSplit = () =>
     currentHand().length === 2 &&
     sameRank(currentHand()[0].rank, currentHand()[1].rank) &&
-    playerHands.length === 1; 
+    playerHands.length === 1;
 
-
-  const startGame = async () => {
+  const startGame = () => {
     setLoading(true);
-    try {
-      resetTable();
-      await fetchJson(`${API}/shoe`, { method: "POST" });
+    resetTable();
 
-      const p1 = await fetchJson(`${API}/hand/player`, {
-        method: "POST",
-        headers: authHeaders(token),
-      });
-      const p2 = await fetchJson(`${API}/hand/player`, {
-        method: "POST",
-        headers: authHeaders(token),
-      });
-      setPlayerHands([[p1, p2]]);
+    fetchJson(`${API}/shoe`, { method: "POST" })
+      .then(() => {
+        setTimeout(async () => {
+          const p1 = await fetchJson(`${API}/hand/player`, {
+            method: "POST",
+            headers: authHeaders(token),
+          });
+          setPlayerHands([[p1]]);
 
-      // deal dealer
-      const d1 = await fetchJson(`${API}/hand/dealer`, {
-        method: "POST",
-        headers: authHeaders(token),
-      });
-      const d2 = await fetchJson(`${API}/hand/dealer`, {
-        method: "POST",
-        headers: authHeaders(token),
-      });
-      setDealerHand([d1, d2]);
+          setTimeout(async () => {
+            const d1 = await fetchJson(`${API}/hand/dealer`, {
+              method: "POST",
+              headers: authHeaders(token),
+            });
+            setDealerHand([d1]);
 
-      setGameStarted(true);
-    } catch (err) {
-      setMessage(`Couldn't start game: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
+            setTimeout(async () => {
+              const p2 = await fetchJson(`${API}/hand/player`, {
+                method: "POST",
+                headers: authHeaders(token),
+              });
+              setPlayerHands((prev) => [[...prev[0], p2]]);
+
+              setTimeout(async () => {
+                const d2 = await fetchJson(`${API}/hand/dealer`, {
+                  method: "POST",
+                  headers: authHeaders(token),
+                });
+                setDealerHand((prev) => [...prev, d2]);
+
+                setGameStarted(true);
+                setLoading(false);
+              }, 1000);
+            }, 1000);
+          }, 1000);
+        }, 1000);
+      })
+      .catch((err) => {
+        setMessage(`Couldn't start game: ${err.message}`);
+        setLoading(false);
+      });
   };
 
   const hit = async () => {
@@ -114,13 +126,16 @@ export default function Game() {
   const stand = () => nextHand();
 
   const nextHand = () => {
-    if (activeHandIdx < playerHands.length - 1)
+    if (activeHandIdx < playerHands.length - 1) {
       setActiveHandIdx(activeHandIdx + 1);
-    else finishDealerPlay();
+    } else {
+      finishDealerPlay();
+    }
   };
 
   const finishDealerPlay = async () => {
     try {
+      setRevealDealerHole(true);
       let dealer = [...dealerHand];
       while (total(dealer) < 17) {
         const card = await fetchJson(`${API}/hand/dealer`, {
@@ -133,11 +148,9 @@ export default function Game() {
 
       const dealerTotal = total(dealer);
 
-      
       const dealerResult =
         dealerTotal > 21 ? "Dealer busts" : `Dealer stands on ${dealerTotal}`;
 
-      
       const results = playerHands.map((hand) => {
         const t = total(hand);
         return t > 21
@@ -178,18 +191,64 @@ export default function Game() {
     }
   };
 
+  const newHand = () => {
+  setLoading(true);
+  resetTable();
+
+  setTimeout(async () => {
+    try {
+      const p1 = await fetchJson(`${API}/hand/player`, {
+        method: "POST",
+        headers: authHeaders(token),
+      });
+      setPlayerHands([[p1]]);
+
+      setTimeout(async () => {
+        const d1 = await fetchJson(`${API}/hand/dealer`, {
+          method: "POST",
+          headers: authHeaders(token),
+        });
+        setDealerHand([d1]);
+
+        setTimeout(async () => {
+          const p2 = await fetchJson(`${API}/hand/player`, {
+            method: "POST",
+            headers: authHeaders(token),
+          });
+          setPlayerHands((prev) => [[...prev[0], p2]]);
+
+          setTimeout(async () => {
+            const d2 = await fetchJson(`${API}/hand/dealer`, {
+              method: "POST",
+              headers: authHeaders(token),
+            });
+            setDealerHand((prev) => [...prev, d2]);
+
+            setGameStarted(true);
+            setLoading(false);
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    } catch (err) {
+      setMessage(`Couldn't start new hand: ${err.message}`);
+      setLoading(false);
+    }
+  }, 1000);
+};
+
+
+
   useEffect(() => {
     if (!token) navigate("/login");
   }, [token, navigate]);
 
-  
   if (!token) return null;
 
   return (
     <main>
       <h2>Blackjack!</h2>
 
-      {!gameStarted ? (
+      {!gameStarted && playerHands.length === 0 ? (
         <button disabled={loading} onClick={startGame}>
           {loading ? "Starting…" : "Start"}
         </button>
@@ -200,16 +259,17 @@ export default function Game() {
             <ul>
               {dealerHand.map((c, i) => (
                 <li key={i}>
-                  {i === 0 || !gameStarted
-                    ? `${cleanRank(c.rank)} of ${c.suit}`
-                    : "🂠"}
+                  {i === 0 && !revealDealerHole
+                    ? "🂠"
+                    : `${cleanRank(c.rank)} of ${c.suit}`}
                 </li>
               ))}
             </ul>
-            {!gameStarted && <p>Total: {total(dealerHand)}</p>}
+            {revealDealerHole && dealerHand.length > 0 && (
+              <p>Total: {total(dealerHand)}</p>
+            )}
           </section>
 
-          
           <section>
             <h3>You</h3>
             {playerHands.map((hand, idx) => (
@@ -230,18 +290,24 @@ export default function Game() {
             ))}
           </section>
 
-          
-          <div className="controls" style={{ gap: "0.5rem" }}>
-            <button onClick={hit}>Hit</button>
-            <button onClick={stand}>Stand</button>
-            <button onClick={split} disabled={!canSplit()}>
-              Split
-            </button>
-          </div>
+          {gameStarted && (
+            <div className="controls" style={{ gap: "0.5rem" }}>
+              <button onClick={hit}>Hit</button>
+              <button onClick={stand}>Stand</button>
+              <button onClick={split} disabled={!canSplit()}>
+                Split
+              </button>
+            </div>
+          )}
         </>
       )}
 
-      {message && <p style={{ marginTop: "1rem" }}>{message}</p>}
+      {message && (
+        <div>
+          <p style={{ marginTop: "1rem" }}>{message}</p>
+          <button onClick={newHand}>Play Another Hand</button>
+        </div>
+      )}
 
       <button
         onClick={() => {
