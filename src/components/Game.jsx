@@ -161,10 +161,31 @@ async function startGame() {
         })
       );
 
-      if (total([...currentHand(), card]) > 21) {
-        setMessage((m) => `${m} Bust. `);
-        nextHand();
-      }
+      const newHands = playerHands.map((h, i) => {
+  if (i === activeHandIdx) {
+    return [...h, card];
+  }
+  return h;
+});
+
+setPlayerHands(newHands);
+setHandTypes(newHands.map(getHandType));
+
+const newTotal = total(newHands[activeHandIdx]);
+if (newTotal > 21) {
+  const allBusted = newHands.every((hand) => total(hand) > 21);
+
+  if (allBusted) {
+    setRevealDealerHole(true);
+    const dealerTotal = total(dealerHand);
+    const results = newHands.map(() => "You Lose");
+    setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
+    setGameStarted(false);
+  } else {
+    setMessage((m) => `${m} Bust. `);
+    setActiveHandIdx((idx) => idx + 1);
+  }
+}
     } catch (err) {
       setMessage(err.message);
     }
@@ -173,19 +194,36 @@ async function startGame() {
   const stand = () => nextHand();
 
   const nextHand = () => {
-    if (activeHandIdx < playerHands.length - 1) {
+    const allHandsPlayed = activeHandIdx >= playerHands.length - 1;
+    const allBusted = playerHands.every((hand) => total(hand) > 21);
+
+    if (!allHandsPlayed) {
       setActiveHandIdx(activeHandIdx + 1);
-      setStrategy(null) //check this works next time you split
+      setStrategy(null);
+    } else if (allBusted) {
+      setRevealDealerHole(true);
+      const dealerTotal = total(dealerHand);
+      const results = playerHands.map(() => "You Lose");
+      setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
+      setGameStarted(false);
     } else {
       finishDealerPlay();
-    }
-  };
+  }
+};
 
   const finishDealerPlay = async () => {
     try {
       setRevealDealerHole(true);
       let dealer = [...dealerHand];
-      while (total(dealer) < 17) {
+
+      const isSoft17 = (hand) => {
+      const totalVal = total(hand);
+      const hasAce = hand.some((card) => isAce(card.rank))
+      let sum = hand.reduce((s, c) => s + c.card_value, 0)
+      return totalVal === 17 && hasAce && sum !== 17
+    };
+
+      while (total(dealer) < 17 || isSoft17(dealer)) {
         const card = await fetchJson(`${API}/hand/dealer`, {
           method: "POST",
           headers: authHeaders(token),
