@@ -30,7 +30,7 @@ export default function Game() {
   const [message, setMessage] = useState("");
   const [revealDealerHole, setRevealDealerHole] = useState(false);
   const [gameNeedsReset, setGameNeedsReset] = useState(false);
-  const [handType, setHandType] = useState(null)
+  const [handTypes, setHandTypes] = useState([])
   const [strategy, setStrategy] = useState(null)
 
   const total = (hand) => {
@@ -64,17 +64,13 @@ export default function Game() {
     currentHand().length === 2 &&
     sameRank(currentHand()[0].rank, currentHand()[1].rank) &&
     playerHands.length === 1;
-  
-  function updateHandType(hand) {
-    if (hand.length === 2 && sameRank(hand[0].rank, hand[1].rank)) {
-      setHandType("pair");
-    } else {
-      const ranks = hand.map(card => card.rank);
-      if (ranks.includes("A")) {
-        setHandType("soft");
+
+  function getHandType(hand) {
+      if (hand.length === 2 && sameRank(hand[0].rank, hand[1].rank)) {
+      return "pair";
       } else {
-        setHandType("hard");
-      }
+      const ranks = hand.map((card) => card.rank);
+      return ranks.includes("A") ? "soft" : "hard";
     }
     }
   
@@ -124,7 +120,7 @@ async function startGame() {
           
           const newPlayerHand = [p1, p2];
           setPlayerHands([newPlayerHand]);
-          updateHandType(newPlayerHand)
+          setHandTypes([getHandType(newPlayerHand)])
 
           setTimeout(async () => {
             const d2 = await fetchJson(`${API}/hand/dealer`, {
@@ -158,7 +154,7 @@ async function startGame() {
         hands.map((h, i) => {
           if (i === activeHandIdx) {
             const newHand = [...h, card];
-            updateHandType(newHand); 
+            setHandTypes([getHandType(newHand)]); 
             return newHand;
           }
           return h;
@@ -179,6 +175,7 @@ async function startGame() {
   const nextHand = () => {
     if (activeHandIdx < playerHands.length - 1) {
       setActiveHandIdx(activeHandIdx + 1);
+      setStrategy(null) //check this works next time you split
     } else {
       finishDealerPlay();
     }
@@ -220,27 +217,34 @@ async function startGame() {
     }
   };
 
-  const split = async () => {
-    if (!canSplit()) return;
-    const [first, second] = currentHand();
-    try {
-      const extra1 = await fetchJson(`${API}/hand/player?hand=1`, {
-        method: "POST",
-        headers: authHeaders(token),
-      });
-      const extra2 = await fetchJson(`${API}/hand/player?hand=2`, {
-        method: "POST",
-        headers: authHeaders(token),
-      });
-      setPlayerHands([
-        [first, extra1],
-        [second, extra2],
-      ]);
-      setActiveHandIdx(0);
-    } catch (err) {
-      setMessage(err.message);
-    }
-  };
+const split = async () => {
+  if (!canSplit()) return;
+  const [first, second] = currentHand();
+
+  try {
+    const extra1 = await fetchJson(`${API}/hand/player?hand=1`, {
+      method: "POST",
+      headers: authHeaders(token),
+    });
+    const extra2 = await fetchJson(`${API}/hand/player?hand=2`, {
+      method: "POST",
+      headers: authHeaders(token),
+    });
+
+    const newHands = [
+      [first, extra1],
+      [second, extra2],
+    ];
+    setPlayerHands(newHands);
+
+    const newHandTypes = newHands.map(getHandType);
+    setHandTypes(newHandTypes);
+
+    setActiveHandIdx(0);
+  } catch (err) {
+    setMessage(err.message);
+  }
+};
 
 
 
@@ -278,7 +282,7 @@ async function newHand(){
 
             const newPlayerHand = [p1, p2];
             setPlayerHands([newPlayerHand]);
-            updateHandType(newPlayerHand)
+            setHandTypes([getHandType(newPlayerHand)])
 
             setTimeout(async () => {
               const d2 = await fetchJson(`${API}/hand/dealer`, {
@@ -304,13 +308,15 @@ async function newHand(){
         const handTotal = String(total(hand))
         const dealerUpcard = dealerHand[1]
 
+        console.log(getHandType(hand))
+
         const response = await fetchJson(`${API}/strategy`, {
         method: "POST",
         headers: authHeaders(token),
         body: JSON.stringify({ 
           players_hand : handTotal,
           dealers_upcard : ["J", "Q", "K"].includes(dealerUpcard.rank) ? "10" : dealerUpcard.rank,
-          hand_type : handType
+          hand_type : getHandType(hand)
         })
       });
       const strategy = response[0].recc_action
