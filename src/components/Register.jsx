@@ -36,7 +36,7 @@ export default function Register({ setToken }) {
 
   return (
     <form onSubmit={handleRegister}>
-      <h2>Register</h2>
+      <h2 className='h2Auth'>Register</h2>
       <input
         type="email"
         placeholder="Email"
@@ -51,7 +51,7 @@ export default function Register({ setToken }) {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      <button type="submit">Register</button>
+      <button className='buttonAuth' type="submit">Register</button>
       {successMessage && <p>{successMessage}</p>}
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     </form>

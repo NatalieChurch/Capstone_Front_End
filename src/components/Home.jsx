@@ -7,9 +7,12 @@ export default function Home() {
 
       
       <main>
-        <h3>In Blackjack, the goal is to get a hand value as close to 21 as possible without exceeding 21, while also having a higher hand than the dealer's. Players aim to beat the dealer, not other players. Number cards are worth their face value, face cards are worth 10, and aces can be 1 or 11. Players can 'hit' or 'stand'. The dealer must hit on 16 or less and they must stand on 17 or more.</h3>
         <br></br>
-        <ol>
+        <p className='homeParagraph'>In Blackjack, the goal is to get a hand value as close to 21 as possible without exceeding 21, while also having a higher hand than the dealer's. Players aim to beat the dealer, not other players. Number cards are worth their face value, face cards are worth 10, and aces can be 1 or 11. Players can 'hit' or 'stand'. The dealer must hit on 16 or less and they must stand on 17 or more.</p>
+        <br></br>
+        <hr></hr>
+        <br></br>
+        <ol className='homeList'>
           <li>
             1. If you are playing a game where you must bet, place your bet in the designated betting area prior to cards being dealt.
           </li>
