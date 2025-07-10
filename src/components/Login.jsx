@@ -33,7 +33,7 @@ export default function Login({ setToken }) {
 
   return (
     <form onSubmit={handleLogin}>
-      <h2>Login</h2>
+      <h2 className='h2Auth'>Login</h2>
 
       <input
         type="email"
@@ -51,7 +51,7 @@ export default function Login({ setToken }) {
         required
       />
 
-      <button type="submit">Login</button>
+      <button className='buttonAuth' type="submit">Login</button>
 
       {message && <p style={{ color: "red" }}>{message}</p>}
     </form>

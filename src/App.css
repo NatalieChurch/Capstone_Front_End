@@ -1,5 +1,6 @@
 /* Google API link for font styles */
-@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&family=Bungee&family=Great+Vibes&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
 
 /* Entire webpage basics */
 * {
@@ -72,11 +73,20 @@ button:hover {
 /* Input fields for login and register pages */
 input {
   padding: 0.6rem;
-  margin: 0.5rem 0;
   border: 1px solid #ccc;
   border-radius: 6px;
   width: 100%;
   max-width: 300px;
+  margin: 1rem auto;
+  display: block;
+}
+
+.buttonAuth {
+  margin: 30px;
+}
+
+form {
+text-align: center;
 }
 
 .container {
@@ -119,7 +129,6 @@ input {
 :root {
   --main-font: 'Montserrat', sans-serif;
   --content-font: 'Roboto', sans-serif;
-  --h3-font: 'Kaushan';
   --main-color: #fff;
   --icon-color: #7d918d;
 }
@@ -132,17 +141,26 @@ h1, h2, h3, h4, h5, h6, ol, ul, li {
 
 /* header 1 styling */
 h1 {
-  font-family: var(--main-font);
-  font-weight: 700;
+  font-family: 'Bitcount Grid Double', system-ui;
+  /* font-family: 'Bungee', sans-serif; */
+  font-weight: 350;
+  font-size: 33px;
   text-transform: uppercase;
 }
 
 /* header 2 styling */
 h2 {
-  font-family: var(--main-font);
-  font-size: 1.875em;
+  font-family: 'Great Vibes', cursive !important;
+  font-size: 2em;
   font-weight: 700;
-  text-transform: uppercase;
+  text-transform: normal;
+  text-align: center;
+}
+
+.h2Auth {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  font-weight: 500;
 }
 
 /* header 3 styling */
@@ -164,13 +182,32 @@ h4 {
 p {
   line-height: 150%;
   font-family: var(--content-font);
-  font-size: 0.9375em;
-  color: #fff;
+  font-size: 1em;
+  color: #fff; 
+}
+
+.homeParagraph {
+  font-size: 1.3em;
+  text-align: center;
 }
 
 /* list styling */
 li {
   list-style-type: none;
+  font-size: 1em;
+}
+
+.homeList {
+  font-size: 1.3em;
+}
+
+hr {
+  width: 100%;
+  background: #fff;
+  display: block;
+  height: 0.1875em;
+  margin: 2.5em auto;
+  background: var(--main-color);
 }
 
 a {
@@ -313,17 +350,15 @@ a {
   background-color: rgba(0, 0, 0, 0.5);
   padding: 2rem;
   border-radius: 12px;
-  width: 100%;
-  max-width: none;
-  height: auto;
-  max-height: none;
-  overflow-y: auto;
-  overflow-x: hidden;
+  max-width: 100vh;
+  overflow: hidden;
   margin-bottom: 100px;
   color: #fff;
   position: relative;
-
-  padding-bottom: 4rem;
+  padding-bottom: 5em;
+  width: 100%;
+  height: auto;
+  max-height: none;
 }
 
 /* The same as Section 1 */
@@ -340,12 +375,16 @@ a {
 
 /* Section 1 refers to the entire sliding banner and nav bar underneath it */
 #section-1 {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   min-height: 50vh;
-  height: auto;
   position: relative;
   overflow: hidden; 
   color: var(--main-color);
   background-color: #222;
+  padding-bottom: 0em;
 }
 
 /* Necessary for sliding banners to show up */
@@ -524,7 +563,11 @@ a {
 /* Font styling for bottom nav bar */
 #section-1 .content-slider nav .controls label span {
   font-size: 1.4em;
-  font-weight: 700;
+  font-weight: 500;
+}
+
+span {
+  font-family: 'Bungee', sans-serif;
 }
 
 /* #section-1 .content-slider nav .controls label a:hover {
@@ -592,7 +635,7 @@ a {
 	#section-1 .content-slider nav .controls {width: 90%;}
 	#section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {font-size: 2em;}
 	#section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {font-size: 4.5em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper {padding-top: 5em;}
+	#section-1 .content-slider .slider .banner .banner-inner-wrapper {padding-top: 5em; padding-bottom: 6em;}
 }
 
 @media only screen and (max-width: 768px) {

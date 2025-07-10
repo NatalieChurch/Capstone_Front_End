@@ -27,11 +27,12 @@ const slides = [
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     content: ["In Blackjack, the goal is to get a hand value as close to 21 as possible without exceeding 21, while also having a higher hand than the dealer's."],
     list: [
-        "1. Place your bet.",
-        "2. The dealer deals the cards.",
-        "3. Add up the value of the cards in your hand, and decide to hit or stand.",
-        "4. The dealer reveals their hand.",
-        "5. Determine the winner."
+        <br></br>,
+        "Place your bet.",
+        "The dealer deals the cards.",
+        "Add up the value of the cards in your hand, and decide to hit or stand.",
+        "The dealer reveals their hand.",
+        "Determine the winner."
     ],
     button: 'Ready To Try It Yourself?',
     link: '/game',
@@ -42,7 +43,12 @@ const slides = [
     subtitle: '',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     content:
-      ["If a player's first two cards are an ace and a 10-value card, it's a blackjack and the player wins immediately. The only exception to this rule is if the dealer also hs a blackjack. If this happens the round ends in a tie and all bets are returned."],
+      [
+      <br></br>,
+      <br></br>,
+      "If a player's first two cards are an ace and a 10-value card, it's a blackjack and the player wins immediately. The only exception to this rule is if the dealer also hs a blackjack. If this happens the round ends in a tie and all bets are returned.",
+      <br></br>
+    ],
   },
 ];
 
