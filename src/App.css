@@ -5,41 +5,56 @@
 /* Entire webpage basics */
 * {
   box-sizing: border-box;
+
   margin: 0;
   padding: 0;
+  
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Basic webpage body styling, including background circular gradient and whitish text color */
 body {
+  min-height: 100vh;
+  line-height: 1.6; 
+
   background: radial-gradient(circle, #79A800, #13563B);
   color: #f5f5f5;
-  min-height: 100vh;
-  line-height: 1.6;
 }
 
-/* root styling */
+/* Root id styling */
 #root {
   display: flex;
   flex-direction: column;
+
   min-height: 100vh;
 }
 
-/* Nav bar (all navs unless overwritten, including both upper and lower bars on homepage) */
+/* Main section */
+main {  
+  flex: 1;
+  
+  padding: 2rem;
+}
+
+/* Nav bar (all navs unless overwritten, including both upper nav bar and lower progress bar on homepage) */
 nav {
-  background-color: #1b1b1b;
-  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  padding: 1rem 2rem;
+
+  background-color: #1b1b1b;
 }
 
 /* Upper nav bar */
 nav a {
-  color: #f5f5f5;
-  text-decoration: none;
   margin: 0 1rem;
   transition: color 0.3s;
+  
+  color: #f5f5f5;
+
+  text-decoration: none;
 }
 
 /* Color of upper nav bar text when hovering over with a cursor */
@@ -47,22 +62,24 @@ nav a:hover {
   color: #ffd700;
 }
 
-/* Main section */
-main {
-  padding: 2rem;
-  flex: 1;
+/* Removes underlining of any links */
+a {
+  text-decoration: none;
 }
 
 /* Buttons for login, register, etc. */
-button {
-  padding: 0.6rem 1.2rem;
-  background-color: #228B22;
-  color: white;
+button { 
   border: none;
   border-radius: 8px;
+
+  padding: 0.6rem 1.2rem;
   margin: 0.5rem;
-  cursor: pointer;
   transition: background 0.3s;
+
+  background-color: #228B22;
+  color: white;
+ 
+  cursor: pointer;
 }
 
 /* Color of buttons for login, register, etc. when hovering */
@@ -70,62 +87,82 @@ button:hover {
   background-color: #2e8b57;
 }
 
-/* Input fields for login and register pages */
-input {
-  padding: 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-  max-width: 300px;
-  margin: 1rem auto;
-  display: block;
-}
-
+/* Changes margin of buttons on Login and Register pages */
 .buttonAuth {
   margin: 30px;
 }
 
+/* Sliding banner buttons */
+.homepage-button {
+  position: relative; 
+  z-index: 3;
+
+  pointer-events: auto;
+}
+
+/* Input fields for login and register pages */
+input {  
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 6px;  
+  width: 100%;
+  max-width: 300px;
+
+  padding: 0.6rem;
+  margin: 1rem auto;
+}
+
+/* Aligns text in form elements */
 form {
 text-align: center;
 }
 
+/* Styling for container class */
 .container {
-  max-width: 600px;
-  margin: 2rem auto;
-  background-color: rgba(0, 0, 0, 0.4);
-  padding: 2rem;
   border-radius: 10px;
+  max-width: 600px;
+  
+  padding: 2rem;
+  margin: 2rem auto;
+
+  background-color: rgba(0, 0, 0, 0.4);
+
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
+/* Styling for card-table class */
 .card-table {
-  display: flex;
-  justify-content: center;
+  display: flex;  
   flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: center;
+  
   margin-top: 2rem;
+  
+  gap: 1rem;
 }
 
+/* Styling for class card */
 .card {
-  width: 80px;
-  height: 120px;
-  background: white;
-  color: black;
-  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 8px;
+  width: 80px;
+  height: 120px;
+  
+  background: white;
+  color: black;
+
   font-size: 1.5rem;
+
   box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
 }
 
 /* ------------ Below is modified Codepen code to fit our project -------------- */
 
 
-/* General Variables */
-
 /* Actual root styling, not just styling of the div with an id=root */
-/* main font, content font, etc. can be copied and pasted into sections below, rather than writing out the specific style every time */
+/* Main font, content font, etc. can be copied and pasted into sections below, rather than writing out the specific style every time */
 :root {
   --main-font: 'Montserrat', sans-serif;
   --content-font: 'Roboto', sans-serif;
@@ -133,305 +170,239 @@ text-align: center;
   --icon-color: #7d918d;
 }
 
-/* Uniform styling for headers and lists */
-h1, h2, h3, h4, h5, h6, ol, ul, li {
-  margin: 0;
+/* Ordered list */
+ol {
   padding: 0;
+  margin: 0;
 }
 
-/* header 1 styling */
+/* Unordered list */
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+/* List styling for the items in the list */
+li {
+  padding: 0; 
+  margin: 0;
+
+  font-size: 1em;  
+  
+  list-style-type: none;
+}
+
+/* Additional styling for the list on the home page underneath the progress bar */
+.homeList {
+  font-size: 1.3em;
+}
+
+/* Header 1 styling */
 h1 {
+  padding: 0;
+  margin: 0;
+
   font-family: 'Bitcount Grid Double', system-ui;
-  /* font-family: 'Bungee', sans-serif; */
   font-weight: 350;
   font-size: 33px;
-  text-transform: uppercase;
+  text-transform: uppercase; 
 }
 
-/* header 2 styling */
+/* Header 2 styling */
 h2 {
+  padding: 0;
+  margin: 0;
+
   font-family: 'Great Vibes', cursive !important;
   font-size: 2em;
   font-weight: 700;
+  text-align: center;  
   text-transform: normal;
-  text-align: center;
 }
 
+/* Header 2 styling specific to the Login and Register pages */
 .h2Auth {
   padding-top: 1em;
   padding-bottom: 1em;
+
   font-weight: 500;
 }
 
-/* header 3 styling */
+/* Header 3 styling */
 h3 {
+  padding: 0;
+  margin: 0;
+
   font-family: var(--h3-font);
   font-size: 1.5em;
   font-weight: 400;
 }
 
-/* header 4 styling */
+/* Header 4 styling */
 h4 {
+  padding: 0;
+  margin: 0;
+ 
   font-family: var(--main-font);
   font-size: 0.875em;
   font-weight: 400;
   text-transform: uppercase;
 }
 
-/* paragraph styling */
+/* Paragraph styling */
 p {
-  line-height: 150%;
+  color: #fff; 
+
   font-family: var(--content-font);
   font-size: 1em;
-  color: #fff; 
+
+  line-height: 150%;
 }
 
+/* Paragraph styling specific to the <p> underneath the progress bar on the home page */
 .homeParagraph {
   font-size: 1.3em;
   text-align: center;
 }
 
-/* list styling */
-li {
-  list-style-type: none;
-  font-size: 1em;
-}
-
-.homeList {
-  font-size: 1.3em;
-}
-
-hr {
-  width: 100%;
-  background: #fff;
+/* Styling of the line between the homeParagraph and the list beneath it on the home page */
+hr { 
   display: block;
+  width: 100%;
   height: 0.1875em;
+  
   margin: 2.5em auto;
-  background: var(--main-color);
+  
+  background: #fff;
 }
-
-a {
-  text-decoration: none;
-}
-
-/* .bg-wrapper {
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(rgba(255,255,255,.8), rgba(255,255,255,.8));
-} */
-
-/* .section-header {
-  padding-top: 5.625em;
-  text-align: center;
-} */
-
-/* .section-header h3 {
-  margin-bottom: 0.5em;
-} */
-
-/* .section-header .line-red {
-  margin: 2.5em auto 2.9375em auto;
-} */
-
-/* .line-red {
-  display: block;
-  width: 4em;
-  height: 0.1875em;
-  margin: 0 auto;
-  background: #f38181;
-} */
-
-
-/* Main Header Styles */
-
-
-/* .main-header {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-  font-family: var(--main-font);
-  color: var(--main-color);
-  background: transparent;
-} */
-
-/* .main-header .header-wrapper {
-  display: block;
-  width: 70%;
-  margin: 0 auto;
-  padding-top: 1em;
-} */
-
-/* .main-header .header-wrapper .main-logo {
-  float: left;
-  font-weight: 700;
-  font-size: 1.875em;
-} */
-
-/* 
-.main-header .header-wrapper .main-menu {
-  float: right;
-  text-align: center;
-} */
-
-/* .main-header .header-wrapper .main-menu li {
-  display: inline-block;
-  padding: 0.75em 1.875em;
-} */
-
-/* .main-header .header-wrapper .main-menu li a {
-  padding-bottom: 0.75em;
-  text-transform: uppercase;
-  color: var(--main-color);
-  font-size: 0.875em;
-} */
-
-/* .main-header .header-wrapper .main-menu li a:hover {
-  color: #fce38a;
-  border-bottom: 0.1875em solid #fce38a;
-  transition: 0.1s;
-} */
-
-/* 
-.main-header .header-wrapper .main-menu li a span {
-  font-size: 1.2em;
-} */
-
-
-/* .main-header .header-wrapper .main-menu li:last-child a {
-  padding: 0.75em 0;
-} */
-
-/* 
-.main-header .header-wrapper .main-menu li:nth-child(6) a:hover,
-.main-header .header-wrapper .main-menu li:last-child a:hover {
-  border: none;
-} */
-
-
-/* Section Styles */
 
 /* Overall slide/banner styling on home page */
 .banner {
   position: absolute;
-  top: 0;
-  left: 100%;
-  width: 100%;
-  min-height: 50vh;
-  height: auto;
-  opacity: 0;
-  transition: all 1s ease;
-  background-size: cover;
-  background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  top: 0;
+  left: 100%;
+  width: 100%;
+  height: auto;
+  min-height: 50vh;
   z-index: 0;
+  
+  background-size: cover;
+  background-position: center;
+
+  text-align: center;
+ 
+  opacity: 0;
+  transition: all 1s ease;
   pointer-events: none;
 }
 
 /* Active slide on the screen for the 5 second interval */
 .banner.active {
-  left: 0;
   top: 0;
-  opacity: 1 !important;
+  left: 0;
   z-index: 10;
+
+  opacity: 1 !important;
   pointer-events: auto;
 }
 
 /* The sliding homepage banners. Added margin-bottom to make sure the buttons were fully visible */
 .banner-inner-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 2rem;
+  align-items: center;  
   border-radius: 12px;
+  width: 100%;  
   max-width: 100vh;
-  overflow: hidden;
-  margin-bottom: 100px;
-  color: #fff;
-  position: relative;
-  padding-bottom: 5em;
-  width: 100%;
   height: auto;
   max-height: none;
+  
+  padding: 2rem;
+  padding-bottom: 5em;
+  margin-bottom: 100px;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+
+  overflow: hidden;
 }
 
-/* The same as Section 1 */
-/* .content-slider {
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
-} */
-
+/* Position of slides */
 .slider {
   position: relative;
   height: 100%;
 }
 
-/* Section 1 refers to the entire sliding banner and nav bar underneath it */
-#section-1 {
-  height: 100vh;
+/* Styling of entire section that includes the sliding banners and the progress bar */
+#slidesAndProgressBar {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
+  height: 100vh;
   min-height: 50vh;
-  position: relative;
-  overflow: hidden; 
+
+  padding-bottom: 0em;
+
   color: var(--main-color);
   background-color: #222;
-  padding-bottom: 0em;
+
+  overflow: hidden; 
 }
 
-/* Necessary for sliding banners to show up */
-#section-1 .content-slider {
+.content-slider {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-#section-1 .content-slider input {
-  display: none;
-}
-
 /* Ensures sliding banner goes across screen */
-#section-1 .content-slider .slider {
+#slidesAndProgressBar .content-slider .slider {
   position: relative;
   width: inherit;
   height: inherit;
+
   overflow: hidden;
 }
 
-/* Ensures bottom nav bar shows up. Banners will also still transition without this, but not as smoothly and by coming from the right side of the screen instead of slowly appearing*/
-#section-1 .content-slider .slider .banner {
+/* Ensures progress bar shows up. Banners will also still transition without this, but not as smoothly and by coming from the right side of the screen instead of slowly appearing*/
+#slidesAndProgressBar .content-slider .slider .banner {
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0;
-  z-index: 0;
   width: inherit;
   height: inherit;
-  text-align: center;
+  z-index: 0;
+
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  
+  text-align: center;
+
+  opacity: 0;
   transition: all .5s ease;
 }
 
 /* Background/colors for sliding banners */
-#section-1 .content-slider .slider .banner .banner-inner-wrapper {
+#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper {
+  box-sizing: border-box;  
   height: 100%;
+
   padding-top: 6em;
+
   background-image: linear-gradient(#13563B, #79A800);
-  box-sizing: border-box;
 }
 
 /* Font styling for sliding banners */
-#section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper h2 {
   padding-bottom: 0.3em;
+
   font-family: var(--h3-font);
   font-weight: 400;
   font-size: 2.5em;
@@ -440,140 +411,115 @@ a {
 
 /* More sliding banner styling, basically ensures the first two banners look similar to the last two */
 /* Controls first two banners titles and subtitles font size and distance between title and subtitle */
-#section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper h1 {
   font-size: 6em;
+
   line-height: 95%;
 }
 
 /* Adds line underneath main content on sliding banner, and before button (if present) */
-#section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper .line {
   display: block;
   width: 4em;
   height: 0.1875em;
+
   margin: 2.5em auto;
+
   background: var(--main-color);
 }
 
-/* #section-1 .content-slider .slider .banner .banner-inner-wrapper .homepage-button {
-  padding-bottom: 5em;
-  z-index: 15 !important;
-} */
-
-/* Sliding banner buttons */
-.homepage-button {
-  z-index: 3;
-  position: relative;
-  pointer-events: auto;
-}
-
 /* Button styling for home page sliding banners */
-#section-1 .content-slider .slider .banner .banner-inner-wrapper .homepage-button a {
+#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper .homepage-button a {
+  border: 0.1875em solid var(--main-color);
+
   padding: 0.5em 2em;
-  text-align: center;
+
+  color: var(--main-color);
+  
   font-family: var(--main-font);
   font-size: 0.875em;
-  color: var(--main-color);
+  text-align: center;
   text-transform: uppercase;
-  border: 0.1875em solid var(--main-color);
 }
 
-/* #section-1 .content-slider .slider .banner .banner-inner-wrapper .homepage-button a:hover {
-  color: #7B1414;
-  border-color: #7B1414;
-  transition: .3s;
-} */
-
-/* #top-banner-1 {
-  background: url('/Lime_and_Dark_Green_Gradient.jpg') no-repeat center center;
-  background-size: cover;
-} */
-/* 
-#top-banner-2 {
-  background: url('/Lime_and_Dark_Green_Gradient.jpg') no-repeat center center;
-  background-size: cover;
-}
-
-#top-banner-3 {
-  background: url('/Lime_and_Dark_Green_Gradient.jpg') no-repeat center center;
-  background-size: cover;
-}
-
-#top-banner-4 {
-  background: url('/Lime_and_Dark_Green_Gradient.jpg') no-repeat center center;
-  background-size: cover;
-} */
-
-/* Styling of bottom nav bar. Necessary for it to appear */
-#section-1 .content-slider nav {
+/* Styling of progress bar. Necessary for it to appear */
+#slidesAndProgressBar .content-slider nav {
   position: absolute;
   bottom: 0.5em;
   width: 100%;
   z-index: 20;
+
   text-align: center;
 }
 
-/* Styling of text and sliding animations in the bottom nav bar */
-#section-1 .content-slider nav .controls {
+/* Styling of text and sliding animations in the progress bar */
+#slidesAndProgressBar .content-slider nav .controls {
   display: block;
   width: 70%;
+
   margin: 0 auto;
-  font-family: var(--main-font);
+
   color: var(--main-color);
+
+  font-family: var(--main-font);  
 }
 
-/* Styling of text and sliding animations in the bottom nav bar. Breaks the text and sliding animations apart into 4 sections */
-#section-1 .content-slider nav .controls label {
+/* Styling of text and sliding animations in the progress bar. Breaks the text and sliding animations apart into 4 sections */
+#slidesAndProgressBar .content-slider nav .controls label {
   position: relative;
   display: inline-block;
   width: 20%;
   height: 3em;
-  overflow: hidden;
-  margin: 0 1em;
+
   padding-top: 1em;
-  text-align: left;
-  text-transform: uppercase;
+  margin: 0 1em;
+  transition: all .3s;  
+
+  color: #fff;
+
+  font-weight: 400;
   font-family: var(--main-font);
   font-size: 1em;
-  color: #fff;
-  font-weight: 400;
+  text-align: left;
+  text-transform: uppercase;
+
   cursor: pointer;
-  transition: all .3s;
+  overflow: hidden;
 }
 
-/* Text and sliding animation in bottom nav bar */
-#section-1 .content-slider nav .controls label .progressbar {
+/* Text and sliding animation in progress bar */
+#slidesAndProgressBar .content-slider nav .controls label .progressbar {
   position: absolute;
   top: 0;
-  left: 0;
-  height: 3px;
+  left: 0;  
   width: 100%;
-  background: #fff;
+  height: 3px;
   z-index: 100;
+
+  background: #fff;
 }
 
-/* Shows the red part of the sliding animation in the bottom nav bar */
-#section-1 .content-slider nav .controls label .progressbar .progressbar-fill {
+/* Shows the red part of the sliding animation in the progress bar */
+#slidesAndProgressBar .content-slider nav .controls label .progressbar .progressbar-fill {
   position: inherit;
   width: inherit;
   height: inherit;
+
   margin-left: -100%;
+
   background: #7B1414;
 }
 
-/* Font styling for bottom nav bar */
-#section-1 .content-slider nav .controls label span {
+/* Font styling for progress bar */
+#slidesAndProgressBar .content-slider nav .controls label span {
   font-size: 1.4em;
   font-weight: 500;
 }
 
+/* Styling for the big letters on the first and second slides on the home page */
 span {
   font-family: 'Bungee', sans-serif;
 }
-
-/* #section-1 .content-slider nav .controls label a:hover {
-  color: #7B1414;
-} */
-
 
 /* Animations - used for sliding animation */
 @keyframes progressBarFill {
@@ -585,65 +531,67 @@ span {
   }
 }
 
-
 /* Media Queries - Specifies how the website shows up depending on the screen */
 @media only screen and (min-width: 1920px) {
 	body {font-size: 22px;}
-	/* .main-header .header-wrapper {width: 57%;} */
-	#section-1 {height: 46em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper {padding-top: 12em;}
+  
+	#slidesAndProgressBar {height: 46em;}
+
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper {padding-top: 12em;}
 }
 
 @media only screen and (max-width: 1919px) {
 	body {font-size: 20px;}
-	/* .main-header .header-wrapper {width: 60%;} */
-	#section-1 {height: 43em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper {padding-top: 11em;}
+
+	#slidesAndProgressBar {height: 43em;}
+
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper {padding-top: 11em;}
 }
 
 @media only screen and (max-width: 1680px) {
 	body {font-size: 18px;}
-	/* .main-header .header-wrapper {width: 65%;} */
-	#section-1 {height: 40em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper {padding-top: 9em;}
+
+	#slidesAndProgressBar {height: 40em;}
+
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper {padding-top: 9em;}
 }
 
 @media only screen and (max-width: 1366px) {
 	body {font-size: 16px;}
-	/* .main-header .header-wrapper {width: 70%;} */
 }
 
 @media only screen and (max-width: 1120px) {
-	/* .main-header .header-wrapper .main-menu li {padding: 0.75em 1.4em;} */
-	#section-1 {height: 35em;}
-	#section-1 .content-slider nav {bottom: -0.2em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper {padding-top: 7em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper .line {margin: 2em auto;}
+	#slidesAndProgressBar .content-slider nav {bottom: -0.2em;}
+  #slidesAndProgressBar {height: 35em;}
+
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper {padding-top: 7em;}
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper .line {margin: 2em auto;}
 }
 
 @media only screen and (max-width: 1024px) {
 	body {font-size: 14px;}
-	/* .main-header .header-wrapper .main-menu li {padding: 0.75em 1.3em;} */
-	#section-1 .content-slider nav {bottom: 0;}
-	#section-1 .content-slider nav .controls {width: 80%;}
+
+	#slidesAndProgressBar .content-slider nav {bottom: 0;}
+	#slidesAndProgressBar .content-slider nav .controls {width: 80%;}
 }
 
 @media only screen and (max-width: 860px) {
-	/* .main-header .header-wrapper .main-menu li {padding: 0.75em 0.9em;} */
-	#section-1 {height: 29em;}
-	#section-1 .content-slider nav {bottom: -1em;}
-	#section-1 .content-slider nav .controls {width: 90%;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {font-size: 2em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {font-size: 4.5em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper {padding-top: 5em; padding-bottom: 6em;}
+	#slidesAndProgressBar .content-slider nav {bottom: -1em;}
+	#slidesAndProgressBar .content-slider nav .controls {width: 90%;}	
+  #slidesAndProgressBar {height: 29em;}
+
+  #slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper {padding-top: 5em; padding-bottom: 6em;}
+	
+  #slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper h2 {font-size: 2em;}
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper h1 {font-size: 4.5em;}
 }
 
 @media only screen and (max-width: 768px) {
-	/* .main-header .header-wrapper .main-menu li {padding: 0.75em 0.5em;} */
-	#section-1 {height: 27em;}
-	#section-1 .content-slider nav .controls {width: 100%;}
-	#section-1 .content-slider nav .controls label {width: 19%; font-size: 0.8em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper .line {margin: 1.7em auto;}
+	#slidesAndProgressBar .content-slider nav .controls {width: 100%;}
+	#slidesAndProgressBar .content-slider nav .controls label {width: 19%; font-size: 0.8em;}	
+  #slidesAndProgressBar {height: 27em;}
+
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper .line {margin: 1.7em auto;}
 }
 
 @media only screen and (max-height: 700px) {
@@ -659,18 +607,14 @@ span {
 @media only screen and (max-width: 650px) {.main-header .header-wrapper {width: 95%;}}
 
 @media only screen and (max-width: 480px) {
-	/* .main-header .header-wrapper {width: 97%;}
-	.main-header .header-wrapper .main-logo {display: none;}
-	.main-header .header-wrapper .main-menu li {padding: 0.2em 0.3em;}
-	.main-header .header-wrapper .main-menu li:last-child,
-	.main-header .header-wrapper .main-menu li:nth-child(6) {padding: 0.2em 0.7em;} */
-	#section-1 {height: 26em;}
-	#section-1 .content-slider nav {bottom: -0.5em;}
-	#section-1 .content-slider nav .controls label {width: 40%; font-size: 0.7em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {font-size: 1.5em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {font-size: 3em;}
-	#section-1 .content-slider .slider .banner .banner-inner-wrapper .line {margin: 1.7em auto;}
-}
+  #slidesAndProgressBar .content-slider nav {bottom: -0.5em;}
+ 	#slidesAndProgressBar .content-slider nav .controls label {width: 40%; font-size: 0.7em;}
+  #slidesAndProgressBar {height: 26em;}
 
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper .line {margin: 1.7em auto;}
+
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper h2 {font-size: 1.5em;}
+	#slidesAndProgressBar .content-slider .slider .banner .banner-inner-wrapper h1 {font-size: 3em;}
+}
 
 /* ------------ Above is modified Codepen code to fit our project -------------- */

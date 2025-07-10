@@ -76,7 +76,7 @@ export default function Slider() {
 
 
    return (
-    <section id="section-1">
+    <section id="slidesAndProgressBar">
       <div className="content-slider">
         <div className="slider">
           {visibleSlides.map((slide, index) => (
