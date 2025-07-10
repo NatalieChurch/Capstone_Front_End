@@ -141,7 +141,7 @@ async function startGame() {
   }
 }
 
-  const hit = async () => {
+const hit = async () => {
     setStrategy(null)
     try {
       const handNum = activeHandIdx + 1;
@@ -166,13 +166,13 @@ async function startGame() {
     return [...h, card];
   }
   return h;
-});
+  });
 
-setPlayerHands(newHands);
-setHandTypes(newHands.map(getHandType));
+  setPlayerHands(newHands);
+  setHandTypes(newHands.map(getHandType));
 
-const newTotal = total(newHands[activeHandIdx]);
-if (newTotal > 21) {
+  const newTotal = total(newHands[activeHandIdx]);
+  if (newTotal > 21) {
   const allBusted = newHands.every((hand) => total(hand) > 21);
 
   if (allBusted) {
@@ -185,13 +185,18 @@ if (newTotal > 21) {
     setMessage((m) => `${m} Bust. `);
     setActiveHandIdx((idx) => idx + 1);
   }
-}
+  }
     } catch (err) {
       setMessage(err.message);
     }
-  };
+};
   
   const stand = () => nextHand();
+
+  function doubleDown(){
+    hit()
+    nextHand()
+  }
 
   const nextHand = () => {
     const allHandsPlayed = activeHandIdx >= playerHands.length - 1;
@@ -346,8 +351,6 @@ async function newHand(){
         const handTotal = String(total(hand))
         const dealerUpcard = dealerHand[1]
 
-        console.log(getHandType(hand))
-
         const response = await fetchJson(`${API}/strategy`, {
         method: "POST",
         headers: authHeaders(token),
@@ -431,6 +434,7 @@ async function newHand(){
           <div className="controls" style={{ gap: "0.5rem" }}>
             <button onClick={hit}>Hit</button>
             <button onClick={stand}>Stand</button>
+            <button onClick={doubleDown}>Double Down</button>
             {canSplit() && (
               <button onClick={split}>
                  Split
