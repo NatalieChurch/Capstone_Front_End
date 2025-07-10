@@ -55,20 +55,31 @@ const slides = [
 export default function Slider() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
+  const visibleSlides = slides.filter(
+    slide => !(slide.title === "Join Us!" && token)
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % slides.length);
+      setCurrentSlide(prev => (prev + 1) % visibleSlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [visibleSlides.length]);
+
+  useEffect(() => {
+    if (currentSlide >= visibleSlides.length) {
+      setCurrentSlide(0);
+    }
+  }, [currentSlide, visibleSlides.length]);
 
 
    return (
     <section id="section-1">
       <div className="content-slider">
         <div className="slider">
-          {slides.map((slide, index) => (
+          {visibleSlides.map((slide, index) => (
             <div
                 key={slide.id}
                 className={`banner ${index === currentSlide ? 'active' : ''}`}
@@ -108,7 +119,7 @@ export default function Slider() {
 
                 <div className="line" />
 
-                {slide.button && slide.link && (
+                {slide.button && slide.link && (slide.title !== "Join Us!" || !token) && (
                   <div className="homepage-button">
                       <button onClick={() => navigate(slide.link)}>
                         {slide.button}
@@ -123,7 +134,7 @@ export default function Slider() {
         {/* Navigation Buttons */}
         <nav>
           <div className="controls">
-            {slides.map((slide, index) => (
+            {visibleSlides.map((slide, index) => (
               <label key={slide.id} onClick={() => setCurrentSlide(index)}>
                 <span className="progressbar">
                   <span

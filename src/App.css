@@ -317,7 +317,8 @@ a {
   top: 0;
   left: 100%;
   width: 100%;
-  height: 100vh;
+  min-height: 50vh;
+  height: auto;
   opacity: 0;
   transition: all 1s ease;
   background-size: cover;
@@ -341,7 +342,11 @@ a {
 
 /* The sliding homepage banners. Added margin-bottom to make sure the buttons were fully visible */
 .banner-inner-wrapper {
-  justify-content: flex;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
   background-color: rgba(0, 0, 0, 0.5);
   padding: 2rem;
   border-radius: 12px;
@@ -351,6 +356,9 @@ a {
   color: #fff;
   position: relative;
   padding-bottom: 5em;
+  width: 100%;
+  height: auto;
+  max-height: none;
 }
 
 /* The same as Section 1 */
@@ -368,11 +376,10 @@ a {
 /* Section 1 refers to the entire sliding banner and nav bar underneath it */
 #section-1 {
   height: 100vh;
-  
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
+  min-height: 50vh;
   position: relative;
   overflow: hidden; 
   color: var(--main-color);
@@ -637,6 +644,16 @@ span {
 	#section-1 .content-slider nav .controls {width: 100%;}
 	#section-1 .content-slider nav .controls label {width: 19%; font-size: 0.8em;}
 	#section-1 .content-slider .slider .banner .banner-inner-wrapper .line {margin: 1.7em auto;}
+}
+
+@media only screen and (max-height: 700px) {
+  .banner-inner-wrapper {
+    padding: 1rem;
+  }
+
+  .homepage-button {
+    margin-bottom: 1rem;
+  }
 }
 
 @media only screen and (max-width: 650px) {.main-header .header-wrapper {width: 95%;}}

@@ -45,7 +45,7 @@ export default function Account() {
 
   return (
     <div>
-      <h2>Welcome, {user.username}!</h2>
+      <h2>Welcome, {user.email}!</h2>
     </div>
   );
 }

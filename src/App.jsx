@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {Routes, Route} from "react-router-dom"
 import Home from './components/Home'
 import Account from './components/Account'
@@ -7,10 +7,18 @@ import NavBar from './components/NavBar'
 import Game from './components/Game'
 import Register from './components/Register'
 import Slider from './components/Slider'
+import { getToken } from './components/Auth'
 import './App.css'
 
 function App() {
   const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      setToken(token);
+    }
+  }, []);
 
   return (
     <>
