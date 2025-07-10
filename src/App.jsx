@@ -8,6 +8,7 @@ import Game from './components/Game'
 import Register from './components/Register'
 import Slider from './components/Slider'
 import './App.css'
+import Dealer from './components/Dealer'
 
 function App() {
   const [token, setToken] = useState(null);
@@ -21,6 +22,7 @@ function App() {
         <Route path="/login" element={<Login setToken={setToken}/>}/>
         <Route path="/register" element={<Register setToken={setToken}/>}/>
         <Route path="/game" element={<Game/>}/>
+        <Route path='/test' element={<Game />} />
       </Routes>
     </>
   )
