@@ -32,6 +32,7 @@ export default function Game() {
   const [gameNeedsReset, setGameNeedsReset] = useState(false);
   const [handTypes, setHandTypes] = useState([])
   const [strategy, setStrategy] = useState(null)
+  const [doubleDownUsed, setDoubleDownUsed] = useState(false);
 
   const total = (hand) => {
     let sum = hand.reduce((s, c) => s + c.card_value, 0);
@@ -56,6 +57,7 @@ export default function Game() {
     setMessage("");
     setRevealDealerHole(false);
     setStrategy(null)
+    setDoubleDownUsed(false)
   };
 
   const currentHand = () => playerHands[activeHandIdx] || [];
@@ -143,6 +145,7 @@ async function startGame() {
 
 const hit = async () => {
     setStrategy(null)
+    setDoubleDownUsed(true)
     try {
       const handNum = activeHandIdx + 1;
       const card = await fetchJson(`${API}/hand/player?hand=${handNum}`, {
@@ -347,22 +350,31 @@ async function newHand(){
   };
 
 
-    async function getStrategy(hand){
-        const handTotal = String(total(hand))
-        const dealerUpcard = dealerHand[1]
+async function getStrategy(hand) {
+  const handTotal = total(hand);
+  
+  if (getHandType(hand) === "hard" && handTotal <= 7) {
+    setStrategy("H");
+    return;
+  }
 
-        const response = await fetchJson(`${API}/strategy`, {
-        method: "POST",
-        headers: authHeaders(token),
-        body: JSON.stringify({ 
-          players_hand : handTotal,
-          dealers_upcard : ["J", "Q", "K"].includes(dealerUpcard.rank) ? "10" : dealerUpcard.rank,
-          hand_type : getHandType(hand)
-        })
-      });
-      const strategy = response[0].recc_action
-      setStrategy(strategy)
-    }
+  const dealerUpcard = dealerHand[1];
+  const upcardRank = ["J", "Q", "K"].includes(dealerUpcard.rank) ? "10" : dealerUpcard.rank;
+  const handType = getHandType(hand);
+
+  const response = await fetchJson(`${API}/strategy`, {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({ 
+      players_hand: String(handTotal),
+      dealers_upcard: upcardRank,
+      hand_type: handType
+    })
+  });
+
+  const strategy = response[0].recc_action;
+  setStrategy(strategy);
+}
 
 
 
@@ -434,7 +446,9 @@ async function newHand(){
           <div className="controls" style={{ gap: "0.5rem" }}>
             <button onClick={hit}>Hit</button>
             <button onClick={stand}>Stand</button>
-            <button onClick={doubleDown}>Double Down</button>
+            {!doubleDownUsed && (
+              <button onClick={doubleDown}>Double Down</button>
+                )}
             {canSplit() && (
               <button onClick={split}>
                  Split
