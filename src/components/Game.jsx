@@ -24,6 +24,13 @@ const STRATEGY_MAP = {
   P: "Split",
 };
 
+const suitSymbol = {
+  hearts: "♥",
+  diamonds: "♦",
+  spades: "♠",
+  clubs: "♣",
+};
+
 export default function Game() {
   const navigate = useNavigate();
   const [token] = useState(getToken());
@@ -390,7 +397,7 @@ async function getStrategy(hand) {
   if (!token) return null;
 
   return (
-  <main>
+  <main className="page_container">
     <h2>Blackjack!</h2>
 
     {gameNeedsReset ? (
@@ -409,10 +416,10 @@ async function getStrategy(hand) {
           <h3>Dealer</h3>
           <div className='card_container'>
             {dealerHand.map((c, i) => (
-              <div key={i} className="card">
+              <div key={i} className="game_card">
                 {i === 0 && !revealDealerHole
                   ? "🂠"
-                  : `${cleanRank(c.rank)} of ${c.suit}`}
+                  : `${cleanRank(c.rank)} ${suitSymbol[c.suit.toLowerCase()]}`}
               </div>
             ))}
           </div>
@@ -431,8 +438,8 @@ async function getStrategy(hand) {
               </strong>
               <div className='card_container'>
                 {hand.map((c, i) => (
-                  <div className="card" key={i}>
-                    {cleanRank(c.rank)} of {c.suit}
+                  <div className="game_card" key={i}>
+                    {cleanRank(c.rank)} {suitSymbol[c.suit.toLowerCase()]}
                   </div>
                 ))}
               </div>
@@ -456,10 +463,10 @@ async function getStrategy(hand) {
 
         {gameStarted && (
           <div className="controls" style={{ gap: "0.5rem" }}>
-            <button onClick={hit}>Hit</button>
-            <button onClick={stand}>Stand</button>
+            <button onClick={hit}><strong>Hit</strong></button>
+            <button onClick={stand}><strong>Stand</strong></button>
             {!doubleDownUsed && (
-              <button onClick={doubleDown}>Double Down</button>
+              <button onClick={doubleDown}><strong>Double Down</strong></button>
                 )}
             {canSplit() && (
               <button onClick={split}>
@@ -479,7 +486,7 @@ async function getStrategy(hand) {
       </>
     )}
 
-    <button
+    {/* <button
       onClick={() => {
         clearToken(() => {});
         navigate("/login");
@@ -487,7 +494,7 @@ async function getStrategy(hand) {
       style={{ marginTop: "2rem" }}
     >
       Log out
-    </button>
+    </button> */}
 
 
 
@@ -501,7 +508,7 @@ async function getStrategy(hand) {
 
       {/* === Dealer 3D Model Canvas === */}
     
-        <div
+        <div className="threeDmodel"
           style={{
             position: "relative",
             top: 0,
