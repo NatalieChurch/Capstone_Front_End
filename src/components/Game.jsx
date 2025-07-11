@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useGLTF } from "@react-three/drei";
 import Dealer from "./Dealer";
+import Table from "./Table";
 
 const API = "http://localhost:3000";
 
@@ -480,6 +481,16 @@ async function getStrategy(hand) {
       Log out
     </button>
 
+
+
+
+
+
+
+
+
+
+
       {/* === Dealer 3D Model Canvas === */}
     
         <div
@@ -493,13 +504,14 @@ async function getStrategy(hand) {
             zIndex: 10000,
           }}
         >
-          <Canvas camera={{ position: [0, 2, 5], fov: 25 }}>
+          <Canvas camera={{ position: [0, 2, 5], fov: 35 }}>
             <ambientLight intensity={0.8} />
             <directionalLight position={[5, 5, 5]} intensity={1} />
             <Suspense fallback = {null}>
+              <Table />
             <Dealer animationName="Idle" />
             </Suspense>
-            <OrbitControls enableZoom = {true} enableRotate = {true} enablePan = {true} target={[-5, 1, 80]} />
+            <OrbitControls enableZoom = {true} enableRotate = {true} enablePan = {true} target={[-4, 1, 80]} />
           </Canvas>
 
         </div>
