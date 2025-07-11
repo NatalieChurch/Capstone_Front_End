@@ -7,7 +7,7 @@ const slides = [
   {
     id: 1,
     title: 'Welcome',
-    subtitle: 'Ready To Play Blackjack?',
+    subtitle: 'Ready To Play?',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     button: 'Start Playing',
     link: '/game',
@@ -34,7 +34,7 @@ const slides = [
         "The dealer reveals their hand.",
         "Determine the winner."
     ],
-    button: 'Ready To Try It Yourself?',
+    button: 'Try It Yourself!',
     link: '/game',
   },
   {
