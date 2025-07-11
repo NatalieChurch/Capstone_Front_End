@@ -31,6 +31,19 @@ const suitSymbol = {
   clubs: "♣",
 };
 
+const cardColor = (suit) => {
+  switch (suit.toLowerCase()) {
+    case "hearts":
+    case "diamonds":
+      return "redcard";
+    case "spades":
+    case "clubs":
+      return "blackcard";
+    default:
+      return "";
+  }
+};
+
 export default function Game() {
   const navigate = useNavigate();
   const [token] = useState(getToken());
@@ -416,7 +429,7 @@ async function getStrategy(hand) {
           <h3>Dealer</h3>
           <div className='card_container'>
             {dealerHand.map((c, i) => (
-              <div key={i} className="game_card">
+              <div key={i} className={`${cardColor(c.suit.toLowerCase())}`}>
                 {i === 0 && !revealDealerHole
                   ? "🂠"
                   : `${cleanRank(c.rank)} ${suitSymbol[c.suit.toLowerCase()]}`}
@@ -438,7 +451,7 @@ async function getStrategy(hand) {
               </strong>
               <div className='card_container'>
                 {hand.map((c, i) => (
-                  <div className="game_card" key={i}>
+                  <div key={i} className={`${cardColor(c.suit.toLowerCase())}`}>
                     {cleanRank(c.rank)} {suitSymbol[c.suit.toLowerCase()]}
                   </div>
                 ))}
@@ -507,7 +520,7 @@ async function getStrategy(hand) {
 
 
       {/* === Dealer 3D Model Canvas === */}
-    
+      <section className="model_container">
         <div className="threeDmodel"
           style={{
             position: "relative",
@@ -530,6 +543,7 @@ async function getStrategy(hand) {
           </Canvas>
 
         </div>
+        </section>
   </main>
 );
 }

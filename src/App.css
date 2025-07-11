@@ -160,8 +160,12 @@ text-align: center;
 
                                             /* GAME STYLING */
 
-.page_container{
+.page_container {
   position: relative;
+  width: 100%;
+  max-width: 1200px;  
+  margin: 0 auto;
+  padding: 0 1rem;    /* optional: side padding */
 }
 
 .game_container {
@@ -172,6 +176,7 @@ text-align: center;
   gap: 2rem;
   width: 100%;
   z-index: 1;
+  margin-top: 3rem;
 }
 
 /* Player section (left) */
@@ -215,11 +220,29 @@ text-align: center;
 }
 
 .redcard{
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  width: 80px;
+  height: 120px;
+  background: white;
+  color: red;
+  font-size: 1.5rem;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
 }
 
 .blackcard{
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  width: 80px;
+  height: 120px;
+  background: white;
+  color: black;
+  font-size: 1.5rem;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
 }
 
 /* Controls under player */
@@ -242,9 +265,15 @@ text-align: center;
   margin-top: 0.75rem;
 }
 
-.threeDmodel{
-position: absolute;
-z-index: 0;
+.model_container{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.threeDmodel {
+  z-index: 0;
 }
 
 
