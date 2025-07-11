@@ -460,10 +460,10 @@ async function getStrategy(hand) {
           <h3>Dealer</h3>
           <div className='card_container'>
             {dealerHand.map((c, i) => (
-              <div key={i} className={`${cardColor(c.suit.toLowerCase())}`}>
-                {i === 0 && !revealDealerHole
-                  ? "🂠"
-                  : `${cleanRank(c.rank)} ${suitSymbol[c.suit.toLowerCase()]}`}
+              <div key={i} className={`${cardColor(c.suit.toLowerCase())} ${
+                    i === 0 && !revealDealerHole ? "hidden-card" : ""
+                    }`}>
+                {`${cleanRank(c.rank)} ${suitSymbol[c.suit.toLowerCase()]}`}
               </div>
             ))}
           </div>
@@ -472,8 +472,7 @@ async function getStrategy(hand) {
           )}
         </section>
 
-                <section className="middle_section">
-
+        <section className="middle_section">
       
         {gameStarted && (
           <div className="controls" style={{ gap: "0.5rem" }}>
@@ -487,7 +486,6 @@ async function getStrategy(hand) {
             )}
           </div>
         )}
-
         
         <section className="results_container">
           {!gameStarted && playerHands.length > 0 && (
