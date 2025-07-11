@@ -27,7 +27,7 @@ export default function Register({ setToken }) {
       }
 
       setSuccessMessage("User successfully created");
-      saveToken(data, setToken);            
+      saveToken(data.token, setToken);            
       navigate("/");
     } catch (err) {
       setErrorMessage("An unexpected error occurred. Please try again.");
