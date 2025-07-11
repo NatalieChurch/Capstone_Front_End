@@ -411,20 +411,51 @@ async function getStrategy(hand) {
 
   return (
   <main className="page_container">
-    <h2>Blackjack!</h2>
 
+
+  {/* === Dealer 3D Model Canvas === */}
+  <div className="model_container">
+    <div className="threeDmodel"
+      style={{
+        position: "relative",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        pointerEvents: "none",
+        zIndex: 0,
+      }}
+    >
+      <Canvas camera={{ position: [0, 2, 5], fov: 35 }}>
+        <ambientLight intensity={0.8} />
+        <directionalLight position={[5, 5, 5]} intensity={1} />
+        <Suspense fallback={null}>
+          <Table />
+          <Dealer animationName="Idle" />
+        </Suspense>
+        <OrbitControls enableZoom={true} enableRotate={true} enablePan={true} target={[-4, 1, 80]} />
+      </Canvas>
+    </div>
+  </div>
+
+  
+  <div className="game_container">
+
+   
     {gameNeedsReset ? (
-      <div>
+      <div className="start_controls">
         <p>Deck is low, please start a new game</p>
         <button onClick={startGame}>Start New Game</button>
       </div>
     ) : !gameStarted && playerHands.length === 0 ? (
-      <button disabled={loading} onClick={startGame}>
-        {loading ? "Starting…" : "Start"}
-      </button>
+      <div className="start_controls">
+        <button disabled={loading} onClick={startGame}>
+          {loading ? "Starting…" : "Start"}
+        </button>
+      </div>
     ) : (
       <>
-      <div className="game_container">
+        
         <section className='dealer_section'>
           <h3>Dealer</h3>
           <div className='card_container'>
@@ -441,10 +472,39 @@ async function getStrategy(hand) {
           )}
         </section>
 
+                <section className="middle_section">
+
+      
+        {gameStarted && (
+          <div className="controls" style={{ gap: "0.5rem" }}>
+            <button onClick={hit}><strong>Hit</strong></button>
+            <button onClick={stand}><strong>Stand</strong></button>
+            {!doubleDownUsed && (
+              <button onClick={doubleDown}><strong>Double Down</strong></button>
+            )}
+            {canSplit() && (
+              <button onClick={split}>Split</button>
+            )}
+          </div>
+        )}
+
+        
+        <section className="results_container">
+          {!gameStarted && playerHands.length > 0 && (
+            <div className="results">
+              {message && <p>{message}</p>}
+              <button onClick={newHand}><strong>Play Another Hand</strong></button>
+            </div>
+          )}
+        </section>
+
+        </section>
+
+        
         <section className="player_section">
           <h3>You</h3>
           {playerHands.map((hand, idx) => (
-            <div  key={idx} >
+            <div key={idx}>
               <strong>
                 Hand {idx + 1}
                 {idx === activeHandIdx && gameStarted && " (active)"}
@@ -456,94 +516,23 @@ async function getStrategy(hand) {
                   </div>
                 ))}
               </div>
-              
+
               <p>Total: {total(hand)}</p>
 
-                <div className="strategy">
-                  <button id="strategy_button" onClick={()=>getStrategy(hand)}>Get Strategy</button>
-                  {strategy && idx === activeHandIdx && (
-                    <p><strong>Recommended Action:</strong> {STRATEGY_MAP[strategy]}</p>
-                  )}
-                </div>
-
+              <div className="strategy">
+                <button id="strategy_button" onClick={() => getStrategy(hand)}>Get Strategy</button>
+                {strategy && idx === activeHandIdx && (
+                  <p><strong>Recommended Action:</strong> {STRATEGY_MAP[strategy]}</p>
+                )}
+              </div>
             </div>
-
           ))}
         </section>
-
-            </div>
-              
-
-        {gameStarted && (
-          <div className="controls" style={{ gap: "0.5rem" }}>
-            <button onClick={hit}><strong>Hit</strong></button>
-            <button onClick={stand}><strong>Stand</strong></button>
-            {!doubleDownUsed && (
-              <button onClick={doubleDown}><strong>Double Down</strong></button>
-                )}
-            {canSplit() && (
-              <button onClick={split}>
-                 Split
-              </button>
-            )}
-          </div>
-        )}
         
 
-        {!gameStarted && playerHands.length > 0 && (
-          <div style={{ marginTop: "1rem" }}>
-            {message && <p>{message}</p>}
-            <button onClick={newHand}>Play Another Hand</button>
-          </div>
-        )}
       </>
     )}
-
-    {/* <button
-      onClick={() => {
-        clearToken(() => {});
-        navigate("/login");
-      }}
-      style={{ marginTop: "2rem" }}
-    >
-      Log out
-    </button> */}
-
-
-
-
-
-
-
-
-
-
-
-      {/* === Dealer 3D Model Canvas === */}
-      <section className="model_container">
-        <div className="threeDmodel"
-          style={{
-            position: "relative",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            pointerEvents: "none",
-            zIndex: 10000,
-          }}
-        >
-          <Canvas camera={{ position: [0, 2, 5], fov: 35 }}>
-            <ambientLight intensity={0.8} />
-            <directionalLight position={[5, 5, 5]} intensity={1} />
-            <Suspense fallback = {null}>
-              <Table />
-            <Dealer animationName="Idle" />
-            </Suspense>
-            <OrbitControls enableZoom = {true} enableRotate = {true} enablePan = {true} target={[-4, 1, 80]} />
-          </Canvas>
-
-        </div>
-        </section>
-  </main>
+  </div>
+</main>
 );
 }
