@@ -56,13 +56,23 @@ export default function Account() {
     return <p style={{ color: "red" }}>{error}</p>;
   }
 
-  if (!user) {
+  if (!user || !stats) {
     return <p>Loading account information...</p>;
   }
 
   return (
     <div>
       <h2>Welcome, {user.email}!</h2>
+      <h3>Your Blackjack Stats:</h3>
+
+      <ul>
+        <li><strong>Hands Played:</strong> {stats.hands_played}</li>
+        <li><strong>Hands Won:</strong> {stats.hands_won}</li>
+        <li><strong>Hands Lost:</strong> {stats.hands_lost}</li>
+        <li><strong>Hands Pushed:</strong> {stats.hands_pushed}</li>
+        <li><strong>Current Win Streak:</strong> {stats.current_streak}</li>
+        <li><strong>Max Win Streak:</strong> {stats.max_streak}</li>
+      </ul>
     </div>
   );
 }
