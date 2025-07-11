@@ -34,7 +34,7 @@ export default function Account() {
 
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://localhost:3000/games", {
+        const res = await fetch("http://localhost:3000/api/games", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
