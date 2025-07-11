@@ -438,16 +438,20 @@ async function getStrategy(hand) {
               
               <p>Total: {total(hand)}</p>
 
+                <div className="strategy">
+                  <button id="strategy_button" onClick={()=>getStrategy(hand)}>Get Strategy</button>
+                  {strategy && idx === activeHandIdx && (
+                    <p><strong>Recommended Action:</strong> {STRATEGY_MAP[strategy]}</p>
+                  )}
+                </div>
+
             </div>
+
           ))}
         </section>
-        </div>
 
-            <button onClick={()=>getStrategy(hand)}>Get Strategy</button>
+            </div>
               
-            {strategy && idx === activeHandIdx && (
-                <p><strong>Recommended Action:</strong> {STRATEGY_MAP[strategy]}</p>
-            )}
 
         {gameStarted && (
           <div className="controls" style={{ gap: "0.5rem" }}>
