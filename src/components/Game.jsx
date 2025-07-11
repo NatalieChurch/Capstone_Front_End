@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect , Suspense } from "react";
 import { getToken, clearToken } from "./Auth";
 import { useNavigate } from "react-router-dom";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import Dealer from "./Dealer";
 
 const API = "http://localhost:3000";
@@ -478,28 +479,6 @@ async function getStrategy(hand) {
     >
       Log out
     </button>
-    {message && <p style={{ marginTop: "1rem" }}>{message}</p>}
-
-      <button
-        onClick={() => {
-          clearToken(() => {});
-          navigate("/login");
-        }}
-        style={{ marginTop: "2rem" }}
-      >
-        Log out
-      </button>
-       {message && <p style={{ marginTop: "1rem" }}>{message}</p>}
-
-      <button
-        onClick={() => {
-          clearToken(() => {});
-          navigate("/login");
-        }}
-        style={{ marginTop: "2rem" }}
-      >
-        Log out
-      </button>
 
       {/* === Dealer 3D Model Canvas === */}
     
@@ -522,6 +501,7 @@ async function getStrategy(hand) {
             </Suspense>
             <OrbitControls enableZoom = {true} enableRotate = {true} enablePan = {true} target={[-5, 1, 80]} />
           </Canvas>
+
         </div>
   </main>
 );
