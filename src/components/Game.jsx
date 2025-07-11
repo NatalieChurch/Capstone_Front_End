@@ -404,48 +404,55 @@ async function getStrategy(hand) {
       </button>
     ) : (
       <>
-        <section>
+      <div className="game_container">
+        <section className='dealer_section'>
           <h3>Dealer</h3>
-          <ul>
+          <div className='card_container'>
             {dealerHand.map((c, i) => (
-              <li key={i}>
+              <div key={i} className="card">
                 {i === 0 && !revealDealerHole
                   ? "🂠"
                   : `${cleanRank(c.rank)} of ${c.suit}`}
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
           {revealDealerHole && dealerHand.length > 0 && (
             <p>Total: {total(dealerHand)}</p>
           )}
         </section>
 
-        <section>
+        <section className="player_section">
           <h3>You</h3>
           {playerHands.map((hand, idx) => (
-            <div key={idx} style={{ marginBottom: "1rem" }}>
+            <div  key={idx} >
               <strong>
                 Hand {idx + 1}
                 {idx === activeHandIdx && gameStarted && " (active)"}
               </strong>
-              <ul>
+              <div className='card_container'>
                 {hand.map((c, i) => (
-                  <li key={i}>
+                  <div className="card" key={i}>
                     {cleanRank(c.rank)} of {c.suit}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
               
               <p>Total: {total(hand)}</p>
-              <button onClick={()=>getStrategy(hand)}>Get Strategy</button>
-              
-                {strategy && idx === activeHandIdx && (
+
+                <div className="strategy">
+                  <button id="strategy_button" onClick={()=>getStrategy(hand)}>Get Strategy</button>
+                  {strategy && idx === activeHandIdx && (
                     <p><strong>Recommended Action:</strong> {STRATEGY_MAP[strategy]}</p>
-                )}
+                  )}
+                </div>
 
             </div>
+
           ))}
         </section>
+
+            </div>
+              
 
         {gameStarted && (
           <div className="controls" style={{ gap: "0.5rem" }}>
@@ -461,6 +468,7 @@ async function getStrategy(hand) {
             )}
           </div>
         )}
+        
 
         {!gameStarted && playerHands.length > 0 && (
           <div style={{ marginTop: "1rem" }}>
