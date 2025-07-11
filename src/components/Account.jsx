@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Account() {
   const [user, setUser] = useState(null);
+  const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -31,7 +32,23 @@ export default function Account() {
       }
     };
 
+    const fetchStats = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/games", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Failed to fetch stats.");
+        const statsData = await res.json();
+        setStats(statsData);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load game statistics.");
+      }
+    };
 
+    fetchStats();
     fetchUser();
   }, []);
 
