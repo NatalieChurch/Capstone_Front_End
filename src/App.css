@@ -251,12 +251,16 @@ text-align: center;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
+
 }
 
 .controls button {
   background-color: white;
   color: black;
+  height: 40px;
+  width: 80px;
+  align-items: center;
+  padding: 5px;
 }
 
 
