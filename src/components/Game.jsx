@@ -518,12 +518,12 @@ async function getStrategy(hand) {
               <p>Total: {total(hand)}</p>
 
               <div className="strategy">
-                <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
                 {strategy && idx === activeHandIdx && (
                   <div className="speech_bubble">
                   <p>In my expert opinion, I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
                   </div>
                 )}
+                <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
               </div>
             </div>
           ))}
