@@ -340,17 +340,19 @@ text-align: center;
 
 .speech_bubble {
   position: relative;
+  display: inline-block;
   background-color: white;
-  color: black !important; /* force text to black */
+  color: black;
   padding: 1rem;
   border-radius: 0.5rem;
   text-align: center;
-  max-width: 250px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 10;
+  white-space: nowrap;
+  overflow: visible;
 }
 
-/* Top-pointing tail */
+/* Tail pointing up */
 .speech_bubble::after {
   content: '';
   position: absolute;
@@ -362,10 +364,42 @@ text-align: center;
   border-color: transparent transparent white transparent;
 }
 
+.speech_bubble::before {
+  content: '';
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 11px 11px 11px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+  z-index: -1;
+}
+
+.typing {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 2.5s steps(100, end) forwards, blink 0.75s step-end infinite;
+  border-right: 2px solid black;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink {
+  50% { border-color: transparent }
+}
+
 .dealer_section p {
   margin-top: 0.75rem;
 }
 
+.speech_bubble p {
+  color: black !important;
+}
 
 
 

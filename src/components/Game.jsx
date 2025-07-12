@@ -520,7 +520,7 @@ async function getStrategy(hand) {
               <div className="strategy">
                 {strategy && idx === activeHandIdx && (
                   <div className="speech_bubble">
-                  <p>In my expert opinion, I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
+                  <p className="typing">In my expert opinion, I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
                   </div>
                 )}
                 <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
