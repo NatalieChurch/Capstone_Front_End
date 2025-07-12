@@ -18,10 +18,10 @@ const authHeaders = (token) => ({
   Authorization: `Bearer ${token}`,
 });
 const STRATEGY_MAP = {
-  H: "Hit",
-  S: "Stand",
-  D: "Double Down Baby",
-  P: "Split",
+  H: "hit",
+  S: "stand",
+  D: "double down baby",
+  P: "split",
 };
 
 const suitSymbol = {
@@ -273,15 +273,15 @@ const hit = async () => {
       const results = playerHands.map((hand) => {
         const t = total(hand);
         return t > 21
-          ? "You Lose"
+          ? "You Lose."
           : dealerTotal > 21 || t > dealerTotal
-          ? "You Win"
+          ? "You Win!"
           : dealerTotal === t
-          ? "You Push"
-          : "You Lose";
+          ? "You Push."
+          : "You Lose.";
       });
 
-      setMessage(`${dealerResult} | ${results.join(" | ")}`);
+      setMessage(`${dealerResult}. ${results}`);
       setGameStarted(false);
     } catch (err) {
       setMessage(err.message);
@@ -482,7 +482,7 @@ async function getStrategy(hand) {
               <button onClick={doubleDown}><strong>Double Down</strong></button>
             )}
             {canSplit() && (
-              <button onClick={split}>Split</button>
+              <button onClick={split}><strong>Split</strong></button>
             )}
           </div>
         )}
@@ -490,7 +490,7 @@ async function getStrategy(hand) {
         <section className="results_container">
           {!gameStarted && playerHands.length > 0 && (
             <div className="results">
-              {message && <p>{message}</p>}
+              {message && <p><strong>{message}</strong></p>}
               <button onClick={newHand}><strong>Play Another Hand</strong></button>
             </div>
           )}
@@ -518,10 +518,13 @@ async function getStrategy(hand) {
               <p>Total: {total(hand)}</p>
 
               <div className="strategy">
-                <button id="strategy_button" onClick={() => getStrategy(hand)}>Get Strategy</button>
                 {strategy && idx === activeHandIdx && (
-                  <p><strong>Recommended Action:</strong> {STRATEGY_MAP[strategy]}</p>
+                  <div className="speech_bubble">
+                  <p className="typing">I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
+                  </div>
                 )}
+                <br/>
+                <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
               </div>
             </div>
           ))}
