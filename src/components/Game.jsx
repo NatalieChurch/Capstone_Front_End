@@ -273,15 +273,15 @@ const hit = async () => {
       const results = playerHands.map((hand) => {
         const t = total(hand);
         return t > 21
-          ? "You Lose"
+          ? "You Lose."
           : dealerTotal > 21 || t > dealerTotal
-          ? "You Win"
+          ? "You Win!"
           : dealerTotal === t
-          ? "You Push"
-          : "You Lose";
+          ? "You Push."
+          : "You Lose.";
       });
 
-      setMessage(`${dealerResult} | ${results.join(" | ")}`);
+      setMessage(`${dealerResult}. ${results}`);
       setGameStarted(false);
     } catch (err) {
       setMessage(err.message);
@@ -490,7 +490,7 @@ async function getStrategy(hand) {
         <section className="results_container">
           {!gameStarted && playerHands.length > 0 && (
             <div className="results">
-              {message && <p>{message}</p>}
+              {message && <p><strong>{message}</strong></p>}
               <button onClick={newHand}><strong>Play Another Hand</strong></button>
             </div>
           )}
@@ -520,9 +520,10 @@ async function getStrategy(hand) {
               <div className="strategy">
                 {strategy && idx === activeHandIdx && (
                   <div className="speech_bubble">
-                  <p className="typing">In my expert opinion, I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
+                  <p className="typing">I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
                   </div>
                 )}
+                <br/>
                 <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
               </div>
             </div>
