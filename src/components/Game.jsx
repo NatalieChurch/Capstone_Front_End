@@ -18,10 +18,10 @@ const authHeaders = (token) => ({
   Authorization: `Bearer ${token}`,
 });
 const STRATEGY_MAP = {
-  H: "Hit",
-  S: "Stand",
-  D: "Double Down Baby",
-  P: "Split",
+  H: "hit",
+  S: "stand",
+  D: "double down baby",
+  P: "split",
 };
 
 const suitSymbol = {
@@ -482,7 +482,7 @@ async function getStrategy(hand) {
               <button onClick={doubleDown}><strong>Double Down</strong></button>
             )}
             {canSplit() && (
-              <button onClick={split}>Split</button>
+              <button onClick={split}><strong>Split</strong></button>
             )}
           </div>
         )}
@@ -518,9 +518,11 @@ async function getStrategy(hand) {
               <p>Total: {total(hand)}</p>
 
               <div className="strategy">
-                <button id="strategy_button" onClick={() => getStrategy(hand)}>Get Strategy</button>
+                <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
                 {strategy && idx === activeHandIdx && (
-                  <p><strong>Recommended Action:</strong> {STRATEGY_MAP[strategy]}</p>
+                  <div className="speech_bubble">
+                  <p>In my expert opinion, I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
+                  </div>
                 )}
               </div>
             </div>
