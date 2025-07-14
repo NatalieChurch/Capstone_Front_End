@@ -484,18 +484,24 @@ async function getStrategy(hand) {
   <div className="game_container">
 
    
-    {gameNeedsReset ? (
-      <div className="start_controls">
-        <p>Deck is low, please start a new game</p>
-        <button onClick={startGame}>Start New Game</button>
-      </div>
-    ) : !gameStarted && playerHands.length === 0 ? (
-      <div className="start_controls">
-        <button disabled={loading} onClick={startGame}>
-          {loading ? "Starting…" : "Start"}
-        </button>
-      </div>
-    ) : (
+        {!gameStarted && playerHands.length === 0 ? (
+          <div className="start_container">
+            {gameNeedsReset ? (
+              <div className="start_controls">
+                <p>Deck is low, please start a new game</p>
+                <button onClick={startGame}>
+                  <strong>Start New Game</strong>
+                </button>
+              </div>
+            ) : (
+              <div className="start_controls">
+                <button disabled={loading} onClick={startGame}>
+                  {loading ? <strong>Starting…</strong> : <strong>Play Blackjack!</strong>}
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
       <>
         
         <section className='dealer_section'>
@@ -575,8 +581,6 @@ async function getStrategy(hand) {
             </div>
           ))}
         </section>
-        
-
       </>
     )}
   </div>
