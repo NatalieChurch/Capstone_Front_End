@@ -593,3 +593,5 @@ async function getStrategy(hand) {
 </main>
 );
 }
+
+//test code
