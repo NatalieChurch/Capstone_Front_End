@@ -58,6 +58,7 @@ export default function Game() {
   const [handTypes, setHandTypes] = useState([])
   const [strategy, setStrategy] = useState(null)
   const [doubleDownUsed, setDoubleDownUsed] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   const total = (hand) => {
     let sum = hand.reduce((s, c) => s + c.card_value, 0);
@@ -110,6 +111,7 @@ export default function Game() {
 async function startGame() {
   setLoading(true);
   resetTable();
+  setGameOver(false);
 
   try {
     const shoe = await checkShoe();
@@ -209,6 +211,7 @@ const hit = async () => {
     const results = newHands.map(() => "You Lose");
     setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
     setGameStarted(false);
+    setGameOver(true);
   } else {
     setMessage((m) => `${m} Bust. `);
     setActiveHandIdx((idx) => idx + 1);
@@ -245,48 +248,91 @@ const hit = async () => {
 };
 
   const finishDealerPlay = async () => {
-    try {
-      setRevealDealerHole(true);
-      let dealer = [...dealerHand];
+  try {
+    setRevealDealerHole(true);
+    let dealer = [...dealerHand];
 
-      const isSoft17 = (hand) => {
+    const isSoft17 = (hand) => {
       const totalVal = total(hand);
-      const hasAce = hand.some((card) => isAce(card.rank))
-      let sum = hand.reduce((s, c) => s + c.card_value, 0)
-      return totalVal === 17 && hasAce && sum !== 17
+      const hasAce = hand.some((card) => isAce(card.rank));
+      let sum = hand.reduce((s, c) => s + c.card_value, 0);
+      return totalVal === 17 && hasAce && sum !== 17;
     };
 
-      while (total(dealer) < 17 || isSoft17(dealer)) {
-        const card = await fetchJson(`${API}/hand/dealer`, {
+    while (total(dealer) < 17 || isSoft17(dealer)) {
+      const card = await fetchJson(`${API}/hand/dealer`, {
+        method: "POST",
+        headers: authHeaders(token),
+      });
+      dealer.push(card);
+    }
+    setDealerHand(dealer);
+
+    const dealerTotal = total(dealer);
+    const dealerResult =
+      dealerTotal > 21 ? "Dealer busts" : `Dealer stands on ${dealerTotal}`;
+
+    const results = await Promise.all(
+      playerHands.map(async (hand) => {
+        const t = total(hand);
+        let outcome;
+
+        if (t > 21) {
+          outcome = "You Lose";
+        } else if (dealerTotal > 21 || t > dealerTotal) {
+          outcome = "You Win";
+        } else if (dealerTotal === t) {
+          outcome = "You Push";
+        } else {
+          outcome = "You Lose";
+        }
+
+        // Record game result in backend
+        await fetch(`${API}/api/games/increment`, {
           method: "POST",
           headers: authHeaders(token),
+          body: JSON.stringify({ stat: "hands_played" }),
         });
-        dealer.push(card);
-      }
-      setDealerHand(dealer);
+        console.log("Incremented hands_won");
 
-      const dealerTotal = total(dealer);
+        if (outcome === "You Win") {
+          await fetch(`${API}/api/games/increment`, {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify({ stat: "hands_won" }),
+          });
+        } else if (outcome === "You Lose") {
+          await fetch(`${API}/api/games/increment`, {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify({ stat: "hands_lost" }),
+          });
+        } else if (outcome === "You Push") {
+          await fetch(`${API}/api/games/increment`, {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify({ stat: "hands_pushed" }),
+          });
+        }
 
-      const dealerResult =
-        dealerTotal > 21 ? "Dealer busts" : `Dealer stands on ${dealerTotal}`;
+        // Update streak
+        await fetch(`${API}/api/games/streak`, {
+          method: "POST",
+          headers: authHeaders(token),
+          body: JSON.stringify({ outcome }),
+        });
 
-      const results = playerHands.map((hand) => {
-        const t = total(hand);
-        return t > 21
-          ? "You Lose."
-          : dealerTotal > 21 || t > dealerTotal
-          ? "You Win!"
-          : dealerTotal === t
-          ? "You Push."
-          : "You Lose.";
-      });
+        return outcome;
+      })
+    );
 
-      setMessage(`${dealerResult}. ${results}`);
-      setGameStarted(false);
-    } catch (err) {
-      setMessage(err.message);
-    }
-  };
+    setMessage(`${dealerResult}. ${results.join(" | ")}`);
+    setGameStarted(false);
+    setGameOver(true);
+  } catch (err) {
+    setMessage(err.message);
+  }
+};
 
 const split = async () => {
   if (!canSplit()) return;
@@ -488,11 +534,11 @@ async function getStrategy(hand) {
         )}
         
         <section className="results_container">
-          {!gameStarted && playerHands.length > 0 && (
-            <div className="results">
-              {message && <p><strong>{message}</strong></p>}
-              <button onClick={newHand}><strong>Play Another Hand</strong></button>
-            </div>
+          {gameOver && (
+          <div className="results">
+            {message && <p><strong>{message}</strong></p>}
+            <button onClick={newHand}><strong>Play Another Hand</strong></button>
+          </div>
           )}
         </section>
 
