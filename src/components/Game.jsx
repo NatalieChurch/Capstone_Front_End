@@ -253,14 +253,8 @@ const hit = async () => {
     setRevealDealerHole(true);
     let dealer = [...dealerHand];
 
-    const isSoft17 = (hand) => {
-      const totalVal = total(hand);
-      const hasAce = hand.some((card) => isAce(card.rank));
-      let sum = hand.reduce((s, c) => s + c.card_value, 0);
-      return totalVal === 17 && hasAce && sum !== 17;
-    };
 
-    while (total(dealer) < 17 || isSoft17(dealer)) {
+    while (total(dealer) <= 17) {
       const card = await fetchJson(`${API}/hand/dealer`, {
         method: "POST",
         headers: authHeaders(token),
@@ -338,6 +332,7 @@ const hit = async () => {
 const split = async () => {
   if (!canSplit()) return;
   const [first, second] = currentHand();
+  setStrategy(null)
 
   try {
     const extra1 = await fetchJson(`${API}/hand/player?hand=1`, {
@@ -570,8 +565,12 @@ async function getStrategy(hand) {
                   <p className="typing">I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
                   </div>
                 )}
-                <br/>
-                <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
+                {idx ===activeHandIdx && (
+                  <>
+                    <br/>
+                    <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
+                  </>
+                )}
               </div>
             </div>
           ))}
