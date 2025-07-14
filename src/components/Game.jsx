@@ -253,8 +253,14 @@ const hit = async () => {
     setRevealDealerHole(true);
     let dealer = [...dealerHand];
 
+    const isSoft17 = (hand) => {
+      const totalVal = total(hand);
+      const hasAce = hand.some((card) => isAce(card.rank));
+      let sum = hand.reduce((s, c) => s + c.card_value, 0);
+      return totalVal === 17 && hasAce && sum !== 17;
+    };
 
-    while (total(dealer) <= 17) {
+    while (total(dealer) < 17 || isSoft17(dealer)) {
       const card = await fetchJson(`${API}/hand/dealer`, {
         method: "POST",
         headers: authHeaders(token),
