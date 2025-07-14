@@ -84,6 +84,7 @@ export default function Game() {
     setRevealDealerHole(false);
     setStrategy(null)
     setDoubleDownUsed(false)
+    setGameOver(false)
   };
 
   const currentHand = () => playerHands[activeHandIdx] || [];
