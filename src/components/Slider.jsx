@@ -28,9 +28,9 @@ const slides = [
     content: ["In Blackjack, the goal is to get a hand value as close to 21 as possible without exceeding 21, while also having a higher hand than the dealer's."],
     list: [
         <br></br>,
-        "Place your bet.",
         "The dealer deals the cards.",
-        "Add up the value of the cards in your hand, and decide to hit or stand.",
+        "Add up the value of the cards in your hand, and decide to hit, stand, double down, or split",
+        "Ask for tips to learn basic strategy.",
         "The dealer reveals their hand.",
         "Determine the winner."
     ],

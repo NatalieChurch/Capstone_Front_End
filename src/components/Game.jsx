@@ -84,6 +84,7 @@ export default function Game() {
     setRevealDealerHole(false);
     setStrategy(null)
     setDoubleDownUsed(false)
+    setGameOver(false)
   };
 
   const currentHand = () => playerHands[activeHandIdx] || [];
@@ -337,6 +338,7 @@ const hit = async () => {
 const split = async () => {
   if (!canSplit()) return;
   const [first, second] = currentHand();
+  setStrategy(null)
 
   try {
     const extra1 = await fetchJson(`${API}/hand/player?hand=1`, {
@@ -488,18 +490,24 @@ async function getStrategy(hand) {
   <div className="game_container">
 
    
-    {gameNeedsReset ? (
-      <div className="start_controls">
-        <p>Deck is low, please start a new game</p>
-        <button onClick={startGame}>Start New Game</button>
-      </div>
-    ) : !gameStarted && playerHands.length === 0 ? (
-      <div className="start_controls">
-        <button disabled={loading} onClick={startGame}>
-          {loading ? "Starting…" : "Start"}
-        </button>
-      </div>
-    ) : (
+        {!gameStarted && playerHands.length === 0 ? (
+          <div className="start_container">
+            {gameNeedsReset ? (
+              <div className="start_controls">
+                <p>Deck is low, please start a new game</p>
+                <button onClick={startGame}>
+                  <strong>Start New Game</strong>
+                </button>
+              </div>
+            ) : (
+              <div className="start_controls">
+                <button disabled={loading} onClick={startGame}>
+                  {loading ? <strong>Starting…</strong> : <strong>Play Blackjack!</strong>}
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
       <>
         
         <section className='dealer_section'>
@@ -569,17 +577,21 @@ async function getStrategy(hand) {
                   <p className="typing">I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
                   </div>
                 )}
-                <br/>
-                <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
+                {idx ===activeHandIdx && (
+                  <>
+                    <br/>
+                    <button id="strategy_button" onClick={() => getStrategy(hand)}><strong>Ask me for strategy</strong></button>
+                  </>
+                )}
               </div>
             </div>
           ))}
         </section>
-        
-
       </>
     )}
   </div>
 </main>
 );
 }
+
+//test code
