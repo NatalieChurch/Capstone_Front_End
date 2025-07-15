@@ -17,7 +17,7 @@ export default function DealerScene() {
             zIndex: 0,
             }}
         >
-            <Canvas camera={{position: [0, 8, 6], fov: 45 }}>
+            <Canvas camera={{position: [0, 8, 6], fov: 55 }}>
                 <ambientLight intensity={0.8} />
                 <directionalLight position={[5, 5, 5]} intensity={1} />
                 <Suspense fallback={null}>
@@ -25,10 +25,10 @@ export default function DealerScene() {
                     <Dealer animationName="Idle" />
                 </Suspense>
                 <OrbitControls 
-                enableZoom={true}
-                enableRotate={true}
-                enablePan={true}
-                target={[-4, 1, 80]}
+                enableZoom={false}
+                enableRotate={false}
+                enablePan={false}
+                target={[-4, 2, 70]}
                 />
             </Canvas>
         </div>
