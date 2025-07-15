@@ -53,7 +53,7 @@ export default function Game() {
   const [gameNeedsReset, setGameNeedsReset] = useState(false);
   const [handTypes, setHandTypes] = useState([])
   const [strategy, setStrategy] = useState(null)
-  const [doubleDownUsed, setDoubleDownUsed] = useState(false);
+  const [doubleDownUsed, setDoubleDownUsed] = useState([]);
   const [gameOver, setGameOver] = useState(false);
 
   const total = (hand) => {
@@ -79,7 +79,7 @@ export default function Game() {
     setMessage("");
     setRevealDealerHole(false);
     setStrategy(null)
-    setDoubleDownUsed(false)
+    setDoubleDownUsed([])
     setGameOver(false)
   };
 
@@ -146,6 +146,7 @@ async function startGame() {
           
           const newPlayerHand = [p1, p2];
           setPlayerHands([newPlayerHand]);
+          setDoubleDownUsed([false]);
           setHandTypes([getHandType(newPlayerHand)])
 
           setTimeout(async () => {
@@ -169,7 +170,9 @@ async function startGame() {
 
 const hit = async () => {
     setStrategy(null)
-    setDoubleDownUsed(true)
+    setDoubleDownUsed((prev) =>
+      prev.map((used, i) => (i === activeHandIdx ? true : used))
+      );
     try {
       const handNum = activeHandIdx + 1;
       const card = await fetchJson(`${API}/hand/player?hand=${handNum}`, {
@@ -222,9 +225,12 @@ const hit = async () => {
   const stand = () => nextHand();
 
   function doubleDown(){
-    hit()
-    nextHand()
-  }
+  setDoubleDownUsed((prev) =>
+    prev.map((used, i) => (i === activeHandIdx ? true : used))
+    );
+      hit();
+      nextHand();
+}
 
   const nextHand = () => {
     const allHandsPlayed = activeHandIdx >= playerHands.length - 1;
@@ -351,6 +357,7 @@ const split = async () => {
       [second, extra2],
     ];
     setPlayerHands(newHands);
+    setDoubleDownUsed([false, false]);
 
     const newHandTypes = newHands.map(getHandType);
     setHandTypes(newHandTypes);
@@ -507,7 +514,7 @@ async function getStrategy(hand) {
           <div className="controls" style={{ gap: "0.5rem" }}>
             <button onClick={hit}><strong>Hit</strong></button>
             <button onClick={stand}><strong>Stand</strong></button>
-            {!doubleDownUsed && (
+            {!doubleDownUsed[activeHandIdx] && (
               <button onClick={doubleDown}><strong>Double Down</strong></button>
             )}
             {canSplit() && (
