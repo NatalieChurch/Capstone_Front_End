@@ -9,7 +9,7 @@ export default function Table() {
         <primitive ref={ref} 
         object={scene} 
         scale={2}  
-        position={[-5, -21, 50]}
+        position={[-5, -20, 50]}
         />
     );
 }
