@@ -1,11 +1,7 @@
-import { useState, useEffect , Suspense } from "react";
+import { useState, useEffect} from "react";
 import { getToken, clearToken } from "./Auth";
 import { useNavigate } from "react-router-dom";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { useGLTF } from "@react-three/drei";
-import Dealer from "./Dealer";
-import Table from "./Table";
+import DealerScene from "./DealerScene";
 
 const API = "http://localhost:3000";
 
@@ -461,30 +457,9 @@ async function getStrategy(hand) {
   <main className="page_container">
 
 
-  {/* === Dealer 3D Model Canvas === */}
-  <div className="model_container">
-    <div className="threeDmodel"
-      style={{
-        position: "relative",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        pointerEvents: "none",
-        zIndex: 0,
-      }}
-    >
-      <Canvas camera={{ position: [0, 2, 5], fov: 35 }}>
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[5, 5, 5]} intensity={1} />
-        <Suspense fallback={null}>
-          <Table />
-          <Dealer animationName="Idle" />
-        </Suspense>
-        <OrbitControls enableZoom={true} enableRotate={true} enablePan={true} target={[-4, 1, 80]} />
-      </Canvas>
-    </div>
-  </div>
+ <div className="model_container">
+  <DealerScene/>
+ </div>
 
   
   <div className="game_container">
