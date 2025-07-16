@@ -499,7 +499,7 @@ async function getStrategy(hand) {
           <div className="controls" style={{ gap: "0.5rem" }}>
             <button onClick={hit}><strong>Hit</strong></button>
             <button onClick={stand}><strong>Stand</strong></button>
-            {!doubleDownUsed[activeHandIdx] && (
+            {!doubleDownUsed[activeHandIdx] && currentHand().length === 2 && (
               <button onClick={doubleDown}><strong>Double Down</strong></button>
             )}
             {canSplit() && (
