@@ -269,54 +269,32 @@ const hit = async () => {
       });
       dealer.push(card);
     }
-    setDealerHand(dealer);
+setDealerHand(dealer);
 
-    const dealerTotal = total(dealer);
-    const dealerResult =
-      dealerTotal > 21 ? "Dealer busts" : `Dealer stands on ${dealerTotal}`;
+const dealerTotal = total(dealer);
 
-    const results = await Promise.all(
-      playerHands.map(async (hand) => {
-        const t = total(hand);
-        let outcome;
+const results = await Promise.all(
+  playerHands.map(async (hand) => {
+    const t = total(hand);
+    let outcome;
 
-        if (t > 21) {
-          outcome = "You Lose";
-        } else if (dealerTotal > 21 || t > dealerTotal) {
-          outcome = "You Win";
-        } else if (dealerTotal === t) {
-          outcome = "You Push";
-        } else {
-          outcome = "You Lose";
-        }
+    if (t > 21) {
+      outcome = "You Lose";
+    } else if (dealerTotal > 21 || t > dealerTotal) {
+      outcome = "You Win";
+    } else if (t === dealerTotal) {
+      outcome = "You Push";
+    } else {
+      outcome = "You Lose";
+    }
 
-        if (outcome === "You Win") {
-          await fetch(`${API}/games/increment`, {
-            method: "POST",
-            headers: authHeaders(token),
-            body: JSON.stringify({ stat: "hands_won" }),
-          });
-        } else if (outcome === "You Lose") {
-          await fetch(`${API}/games/increment`, {
-            method: "POST",
-            headers: authHeaders(token),
-            body: JSON.stringify({ stat: "hands_lost" }),
-          });
-        } else if (outcome === "You Push") {
-          await fetch(`${API}/games/increment`, {
-            method: "POST",
-            headers: authHeaders(token),
-            body: JSON.stringify({ stat: "hands_pushed" }),
-          });
-        }
+    return outcome;
+  })
+);
 
-        return outcome;
-      })
-    );
-
-    setMessage(`${dealerResult}. ${results.join(" | ")}`);
-    setGameStarted(false);
-    setGameOver(true);
+setMessage(`Dealer stands on ${dealerTotal}. ${results.join(" | ")}`);
+setGameStarted(false);
+setGameOver(true);
   } catch (err) {
     setMessage(err.message);
   }
