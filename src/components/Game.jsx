@@ -86,10 +86,12 @@ export default function Game() {
 
   const currentHand = () => playerHands[activeHandIdx] || [];
 
-  const canSplit = () =>
-    currentHand().length === 2 &&
-    sameRank(currentHand()[0].rank, currentHand()[1].rank) &&
-    playerHands.length === 1;
+const MAX_HANDS = 4
+
+const canSplit = () =>
+  currentHand().length === 2 &&
+  sameRank(currentHand()[0].rank, currentHand()[1].rank) &&
+  playerHands.length < MAX_HANDS;
 
   function getHandType(hand) {
       if (hand.length === 2 && sameRank(hand[0].rank, hand[1].rank)) {
