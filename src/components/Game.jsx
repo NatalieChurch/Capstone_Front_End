@@ -290,40 +290,25 @@ const hit = async () => {
           outcome = "You Lose";
         }
 
-        // Record game result in backend
-        await fetch(`${API}/api/games/increment`, {
-          method: "POST",
-          headers: authHeaders(token),
-          body: JSON.stringify({ stat: "hands_played" }),
-        });
-        console.log("Incremented hands_won");
-
         if (outcome === "You Win") {
-          await fetch(`${API}/api/games/increment`, {
+          await fetch(`${API}/games/increment`, {
             method: "POST",
             headers: authHeaders(token),
             body: JSON.stringify({ stat: "hands_won" }),
           });
         } else if (outcome === "You Lose") {
-          await fetch(`${API}/api/games/increment`, {
+          await fetch(`${API}/games/increment`, {
             method: "POST",
             headers: authHeaders(token),
             body: JSON.stringify({ stat: "hands_lost" }),
           });
         } else if (outcome === "You Push") {
-          await fetch(`${API}/api/games/increment`, {
+          await fetch(`${API}/games/increment`, {
             method: "POST",
             headers: authHeaders(token),
             body: JSON.stringify({ stat: "hands_pushed" }),
           });
         }
-
-        // Update streak
-        await fetch(`${API}/api/games/streak`, {
-          method: "POST",
-          headers: authHeaders(token),
-          body: JSON.stringify({ outcome }),
-        });
 
         return outcome;
       })
