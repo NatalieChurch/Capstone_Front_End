@@ -55,6 +55,7 @@ export default function Game() {
   const [strategy, setStrategy] = useState(null)
   const [doubleDownUsed, setDoubleDownUsed] = useState([]);
   const [gameOver, setGameOver] = useState(false);
+  const [dealerAnimation, setDealerAnimation] = useState("Idle");
 
   const total = (hand) => {
     let sum = hand.reduce((s, c) => s + c.card_value, 0);
@@ -106,6 +107,7 @@ export default function Game() {
   }
 
 async function startGame() {
+  setDealerAnimation("DealingAllCards");
   setLoading(true);
   resetTable();
   setGameOver(false);
@@ -156,8 +158,12 @@ async function startGame() {
             });
             setDealerHand((prev) => [...prev, d2]);
 
-            setGameStarted(true);
+            setGameStarted(true)
+            setTimeout(() =>{
+            setDealerAnimation("Idle")
+            }, 1000);;
             setLoading(false);
+            
           }, 1000);
         }, 1000);
       }, 1000);
@@ -169,6 +175,10 @@ async function startGame() {
 }
 
 const hit = async () => {
+  setDealerAnimation("Hit");
+  setTimeout(() =>{
+    setDealerAnimation("Idle");
+  }, 1000);
     setStrategy(null)
     setDoubleDownUsed((prev) =>
       prev.map((used, i) => (i === activeHandIdx ? true : used))
@@ -371,12 +381,14 @@ const split = async () => {
 
 
 async function newHand(){
+    setDealerAnimation("DealingAllCards");
     setLoading(true);
     resetTable();
 
     const shoe = await checkShoe();
     if (shoe.length < 10) {
       setGameNeedsReset(true);
+      setDealerAnimation("Idle");
       setLoading(false);
       return
     }
@@ -414,6 +426,9 @@ async function newHand(){
               setDealerHand((prev) => [...prev, d2]);
 
               setGameStarted(true);
+              setTimeout(() =>{
+              setDealerAnimation("Idle")
+               }, 1000);;
               setLoading(false);
             }, 1000);
           }, 1000);
@@ -465,7 +480,7 @@ async function getStrategy(hand) {
 
 
  <div className="model_container">
-  <DealerScene/>
+  <DealerScene animationName={dealerAnimation}/>
  </div>
 
   
