@@ -194,55 +194,62 @@ const hit = async () => {
       headers: authHeaders(token),
     });
 
-    // Use functional update and do everything based on that
-    setPlayerHands((prevHands) => {
-      const updated = prevHands.map((h, i) => {
-        if (i === activeHandIdx) {
-          return [...h, card];
-        }
-        return h;
-      });
+    // Create updated hands manually so we can check the result before setting state
+    const updatedHands = playerHands.map((h, i) => {
+      if (i === activeHandIdx) {
+        return [...h, card];
+      }
+      return h;
+    });
 
-      // Update hand types
-      setHandTypes(updated.map(getHandType));
+    const newTotal = total(updatedHands[activeHandIdx]);
 
-      // Check for bust logic inside this update
-      const newTotal = total(updated[activeHandIdx]);
-      if (newTotal > 21) {
-        const allBusted = updated.every((hand) => total(hand) > 21);
+    setPlayerHands(updatedHands);
+    setHandTypes(updatedHands.map(getHandType));
 
-        if (allBusted) {
-          setRevealDealerHole(true);
-          const dealerTotal = total(dealerHand);
-          const results = updated.map(() => "You Lose");
-          setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
-          setGameStarted(false);
-          setGameOver(true);
-        } else {
-          setMessage((m) => `${m} Bust. `);
-          setActiveHandIdx((idx) => idx + 1);
-        }
+    if (newTotal > 21) {
+      const allBusted = updatedHands.every((hand) => total(hand) > 21);
+
+      if (allBusted) {
+        setRevealDealerHole(true);
+        const dealerTotal = total(dealerHand);
+        const results = updatedHands.map(() => "You Lose");
+        setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
+        setGameStarted(false);
+        setGameOver(true);
+      } else {
+        setMessage((m) => `${m} Bust. `);
+        setActiveHandIdx((idx) => idx + 1);
       }
 
-      return updated;
-    });
+      return true; // ⬅️ Hand busted
+    }
+
+    return false; // ⬅️ Still alive
   } catch (err) {
     setMessage(err.message);
+    return false;
   }
 };
   
   const stand = () => nextHand();
 
 async function doubleDown() {
+  // Mark this hand as having used double down
   setDoubleDownUsed((prev) =>
     prev.map((used, i) => (i === activeHandIdx ? true : used))
   );
 
-  await hit();
+  // Hit once and check if the player busted
+  const busted = await hit(); // <- assumes `hit()` returns true if busted
 
+  // If player busted, skip calling nextHand (game is already handled)
+  if (busted) return;
+
+  // Otherwise, go to the next hand after a short delay
   setTimeout(() => {
     nextHand();
-  }, 300); 
+  }, 300);
 }
 
 const nextHand = () => {
