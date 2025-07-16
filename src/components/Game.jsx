@@ -194,7 +194,6 @@ const hit = async () => {
       headers: authHeaders(token),
     });
 
-    // Create updated hands manually so we can check the result before setting state
     const updatedHands = playerHands.map((h, i) => {
       if (i === activeHandIdx) {
         return [...h, card];
@@ -222,31 +221,26 @@ const hit = async () => {
         setActiveHandIdx((idx) => idx + 1);
       }
 
-      return true; // ⬅️ Hand busted
+      return true; 
     }
 
-    return false; // ⬅️ Still alive
+    return false; 
   } catch (err) {
     setMessage(err.message);
     return false;
   }
 };
   
-  const stand = () => nextHand();
+const stand = () => nextHand();
 
 async function doubleDown() {
-  // Mark this hand as having used double down
   setDoubleDownUsed((prev) =>
     prev.map((used, i) => (i === activeHandIdx ? true : used))
   );
 
-  // Hit once and check if the player busted
-  const busted = await hit(); // <- assumes `hit()` returns true if busted
-
-  // If player busted, skip calling nextHand (game is already handled)
+  const busted = await hit(); 
   if (busted) return;
 
-  // Otherwise, go to the next hand after a short delay
   setTimeout(() => {
     nextHand();
   }, 300);
@@ -598,4 +592,3 @@ async function getStrategy(hand) {
 );
 }
 
-//test code
