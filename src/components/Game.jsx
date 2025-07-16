@@ -236,12 +236,16 @@ const hit = async () => {
   
   const stand = () => nextHand();
 
-  function doubleDown(){
+function doubleDown() {
   setDoubleDownUsed((prev) =>
     prev.map((used, i) => (i === activeHandIdx ? true : used))
-    );
-      hit();
-      nextHand();
+  );
+
+  hit();
+
+  setTimeout(() => {
+    nextHand();
+  }, 300); 
 }
 
   const nextHand = () => {
