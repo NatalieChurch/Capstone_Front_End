@@ -4,7 +4,7 @@ import { OrbitControls } from "@react-three/drei";
 import Dealer from "./Dealer";
 import Table from "./Table";
 
-export default function DealerScene() {
+export default function DealerScene({ animationName = "Idle" }) {
     return(
         <div className="threeDmodel"
         style={{
@@ -22,7 +22,7 @@ export default function DealerScene() {
                 <directionalLight position={[5, 5, 5]} intensity={1} />
                 <Suspense fallback={null}>
                    <Table />
-                    <Dealer animationName="Idle" />
+                    <Dealer animationName={animationName} />
                 </Suspense>
                 <OrbitControls 
                 enableZoom={false}
