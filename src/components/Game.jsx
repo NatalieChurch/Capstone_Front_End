@@ -430,6 +430,9 @@ async function getStrategy(hand) {
   });
 
   const strategy = response[0].recc_action;
+  if (strategy === "D" && hand.length >= 3){
+    setStrategy("H")
+  } else 
   setStrategy(strategy);
 }
 
