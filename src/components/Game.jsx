@@ -86,10 +86,12 @@ export default function Game() {
 
   const currentHand = () => playerHands[activeHandIdx] || [];
 
-  const canSplit = () =>
-    currentHand().length === 2 &&
-    sameRank(currentHand()[0].rank, currentHand()[1].rank) &&
-    playerHands.length === 1;
+const MAX_HANDS = 4
+
+const canSplit = () =>
+  currentHand().length === 2 &&
+  sameRank(currentHand()[0].rank, currentHand()[1].rank) &&
+  playerHands.length < MAX_HANDS;
 
   function getHandType(hand) {
       if (hand.length === 2 && sameRank(hand[0].rank, hand[1].rank)) {
@@ -176,91 +178,108 @@ async function startGame() {
 
 const hit = async () => {
   setDealerAnimation("Hit");
-  setTimeout(() =>{
+  setTimeout(() => {
     setDealerAnimation("Idle");
   }, 1000);
-    setStrategy(null)
-    setDoubleDownUsed((prev) =>
-      prev.map((used, i) => (i === activeHandIdx ? true : used))
-      );
-    try {
-      const handNum = activeHandIdx + 1;
-      const card = await fetchJson(`${API}/hand/player?hand=${handNum}`, {
-        method: "POST",
-        headers: authHeaders(token),
-      });
 
-  setPlayerHands((hands) =>
-        hands.map((h, i) => {
-          if (i === activeHandIdx) {
-            const newHand = [...h, card];
-            setHandTypes([getHandType(newHand)]); 
-            return newHand;
-          }
-          return h;
-        })
-      );
+  setStrategy(null);
+  setDoubleDownUsed((prev) =>
+    prev.map((used, i) => (i === activeHandIdx ? true : used))
+  );
 
-      const newHands = playerHands.map((h, i) => {
-  if (i === activeHandIdx) {
-    return [...h, card];
-  }
-  return h;
-  });
+  try {
+    const handNum = activeHandIdx + 1;
+    const card = await fetchJson(`${API}/hand/player?hand=${handNum}`, {
+      method: "POST",
+      headers: authHeaders(token),
+    });
 
-  setPlayerHands(newHands);
-  setHandTypes(newHands.map(getHandType));
+    // Create updated hands manually so we can check the result before setting state
+    const updatedHands = playerHands.map((h, i) => {
+      if (i === activeHandIdx) {
+        return [...h, card];
+      }
+      return h;
+    });
 
-  const newTotal = total(newHands[activeHandIdx]);
-  if (newTotal > 21) {
-  const allBusted = newHands.every((hand) => total(hand) > 21);
+    const newTotal = total(updatedHands[activeHandIdx]);
 
-  if (allBusted) {
-    setRevealDealerHole(true);
-    const dealerTotal = total(dealerHand);
-    const results = newHands.map(() => "You Lose");
-    setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
-    setGameStarted(false);
-    setGameOver(true);
-  } else {
-    setMessage((m) => `${m} Bust. `);
-    setActiveHandIdx((idx) => idx + 1);
-  }
-  }
-    } catch (err) {
-      setMessage(err.message);
+    setPlayerHands(updatedHands);
+    setHandTypes(updatedHands.map(getHandType));
+
+    if (newTotal > 21) {
+      const allBusted = updatedHands.every((hand) => total(hand) > 21);
+
+      if (allBusted) {
+        setRevealDealerHole(true);
+        const dealerTotal = total(dealerHand);
+        const results = updatedHands.map(() => "You Lose");
+        setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
+        setGameStarted(false);
+        setGameOver(true);
+      } else {
+        setMessage((m) => `${m} Bust. `);
+        setActiveHandIdx((idx) => idx + 1);
+      }
+
+      return true; // ⬅️ Hand busted
     }
+
+    return false; // ⬅️ Still alive
+  } catch (err) {
+    setMessage(err.message);
+    return false;
+  }
 };
   
   const stand = () => nextHand();
 
-  function doubleDown(){
+async function doubleDown() {
+  // Mark this hand as having used double down
   setDoubleDownUsed((prev) =>
     prev.map((used, i) => (i === activeHandIdx ? true : used))
-    );
-      hit();
-      nextHand();
+  );
+
+  // Hit once and check if the player busted
+  const busted = await hit(); // <- assumes `hit()` returns true if busted
+
+  // If player busted, skip calling nextHand (game is already handled)
+  if (busted) return;
+
+  // Otherwise, go to the next hand after a short delay
+  setTimeout(() => {
+    nextHand();
+  }, 300);
 }
 
-  const nextHand = () => {
-    const allHandsPlayed = activeHandIdx >= playerHands.length - 1;
-    const allBusted = playerHands.every((hand) => total(hand) > 21);
+const nextHand = () => {
+  const nextIdx = activeHandIdx + 1;
 
-    if (!allHandsPlayed) {
-      setActiveHandIdx(activeHandIdx + 1);
-      setStrategy(null);
-    } else if (allBusted) {
-      setRevealDealerHole(true);
-      const dealerTotal = total(dealerHand);
-      const results = playerHands.map(() => "You Lose");
-      setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
-      setGameStarted(false);
-    } else {
-      finishDealerPlay();
+  const isAllBusted = (hands) => hands.every((hand) => total(hand) > 21);
+
+  if (nextIdx < playerHands.length) {
+    setActiveHandIdx(nextIdx);
+    setStrategy(null);
+    return;
   }
+
+  if (isAllBusted(playerHands)) {
+    setRevealDealerHole(true);
+    const dealerTotal = total(dealerHand);
+    const results = playerHands.map(() => "You Lose");
+    setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
+    setGameStarted(false);
+    setGameOver(true);
+    return;
+  }
+
+  finishDealerPlay();
 };
 
-  const finishDealerPlay = async () => {
+  const finishDealerPlay = () => {
+      const allBusted = playerHands.every((hand) => total(hand) > 21);
+      if (allBusted) return;
+
   try {
     setRevealDealerHole(true);
     let dealer = [...dealerHand];
@@ -272,42 +291,61 @@ const hit = async () => {
       return totalVal === 17 && hasAce && sum !== 17;
     };
 
-    while (total(dealer) < 17 || isSoft17(dealer)) {
+    const continueDealerPlay = async () => {
+      const shouldHit = total(dealer) < 17 || isSoft17(dealer);
+      if (!shouldHit) {
+        finishResults(dealer);
+        return;
+      }
+
       const card = await fetchJson(`${API}/hand/dealer`, {
         method: "POST",
         headers: authHeaders(token),
       });
+
       dealer.push(card);
-    }
-setDealerHand(dealer);
+      setDealerHand([...dealer]);
 
-const dealerTotal = total(dealer);
+      setTimeout(() => {
+        continueDealerPlay();
+      }, 1000);
+    };
 
-const results = await Promise.all(
-  playerHands.map(async (hand) => {
-    const t = total(hand);
-    let outcome;
+    const finishResults = async (finalDealerHand) => {
+      const dealerTotal = total(finalDealerHand);
 
-    if (t > 21) {
-      outcome = "You Lose";
-    } else if (dealerTotal > 21 || t > dealerTotal) {
-      outcome = "You Win";
-    } else if (t === dealerTotal) {
-      outcome = "You Push";
-    } else {
-      outcome = "You Lose";
-    }
+      const results = await Promise.all(
+        playerHands.map(async (hand) => {
+          const t = total(hand);
+          let outcome;
 
-    return outcome;
-  })
-);
-    const dealerMessage = dealerTotal > 21
-      ? "Dealer busts"
-      : `Dealer stands on ${dealerTotal}`;
+          if (t > 21) {
+            outcome = "You Lose";
+          } else if (dealerTotal > 21 || t > dealerTotal) {
+            outcome = "You Win";
+          } else if (t === dealerTotal) {
+            outcome = "You Push";
+          } else {
+            outcome = "You Lose";
+          }
 
-setMessage(`${dealerMessage} | ${results.join(" | ")}`);
-setGameStarted(false);
-setGameOver(true);
+          return outcome;
+        })
+      );
+
+      const dealerMessage =
+        dealerTotal > 21
+          ? "Dealer busts"
+          : `Dealer stands on ${dealerTotal}`;
+
+      setMessage(`${dealerMessage} | ${results.join(" | ")}`);
+      setGameStarted(false);
+      setGameOver(true);
+    };
+
+    setTimeout(() => {
+      continueDealerPlay();
+    }, 1000);
   } catch (err) {
     setMessage(err.message);
   }
@@ -430,6 +468,9 @@ async function getStrategy(hand) {
   });
 
   const strategy = response[0].recc_action;
+  if (strategy === "D" && hand.length >= 3){
+    setStrategy("H")
+  } else 
   setStrategy(strategy);
 }
 
