@@ -291,8 +291,11 @@ const results = await Promise.all(
     return outcome;
   })
 );
+    const dealerMessage = dealerTotal > 21
+      ? "Dealer busts"
+      : `Dealer stands on ${dealerTotal}`;
 
-setMessage(`Dealer stands on ${dealerTotal}. ${results.join(" | ")}`);
+setMessage(`${dealerMessage} | ${results.join(" | ")}`);
 setGameStarted(false);
 setGameOver(true);
   } catch (err) {
