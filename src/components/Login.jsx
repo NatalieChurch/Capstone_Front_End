@@ -28,7 +28,7 @@ export default function Login({ setToken }) {
       saveToken(data.token, setToken);     
       navigate("/");
     } catch (err) {
-      setMessage("An unexpected error occurred. Please try again.");
+      setMessage("Login Failed. Please check email or password and try again.");
     }
   };
 
