@@ -556,7 +556,7 @@ async function getStrategy(hand) {
               <div className="strategy">
                 {strategy && idx === activeHandIdx && (
                   <div className="speech_bubble">
-                  <p className="typing">I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
+                  <p className="typing">I recommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
                   </div>
                 )}
                 {idx ===activeHandIdx && (
