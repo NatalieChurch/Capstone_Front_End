@@ -41,7 +41,6 @@ export default function Account() {
         });
         if (!res.ok) throw new Error("Failed to fetch stats.");
         const statsData = await res.json();
-        console.log(statsData)
         setStats(statsData);
       } catch (err) {
         console.error(err);
@@ -64,7 +63,7 @@ export default function Account() {
   const handsWon = stats.reduce((sum, hand) => sum + hand.hands_won, 0);
   const handsLost = stats.reduce((sum, hand) => sum + hand.hands_lost, 0);
   const handsPushed = stats.reduce((sum, hand) => sum + hand.hands_pushed, 0);
-  const winningPct = (handsWon/stats.length) * 100
+  const winningPct = isNaN(handsWon / stats.length) ? 0 : Number((handsWon / stats.length) * 100).toFixed(2);
 
   return (
     <div className="stats-card">
