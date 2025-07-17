@@ -9,10 +9,15 @@ const slides = [
     id: 1,
     // barTitle is the word underneath the progress bar, describes the slide it's attached to
     barTitle: "Welcome",
+    // What you see in cursive on the sliding banner
     title: 'Welcome to Blackjack Academy',
+    // What you see in bold in the sliding banner
     subtitle: 'Ready To Learn?',
+    // Background image (green gradient)
     background: '/Lime_and_Dark_Green_Gradient.jpg',
+    // Text for button on banner (if there is one)
     button: 'Start Playing',
+    // Route the button redirects to when clicked
     link: '/game',
   },
   {
@@ -21,6 +26,7 @@ const slides = [
     title: 'Join Us to Start Learning!',
     subtitle: 'Create an Account',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
+    // Content refers to the paragraph on the sliding banner. In this slide it's empty (no paragraph), in slide 03 and 04 it has text
     content: [],
     button: 'Register',
     link: '/register',
@@ -29,6 +35,7 @@ const slides = [
     id: 3,
     barTitle: "Practice",
     title: "Don't embarrass yourself at the table",
+    // An empty subtitle like this means that there is no subtitle on the slide itself, so no bold letters
     subtitle: '',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     content: ["New to blackjack? Have an upcoming trip to Vegas planned? Don't look like an amateur at the casino! With Blackjack Academy you can practice with no-stakes single-deck blackjack and get tips on what to do as you play! "],
@@ -46,15 +53,20 @@ const slides = [
   },
 ];
 
+// Exports Slider component, imported in Home component
 export default function Slider() {
+  // currentSlide variable
   const [currentSlide, setCurrentSlide] = useState(0);
+  // useNavigate is used to direct the user to a different route when a button is clicked
   const navigate = useNavigate();
+  // gets the token from local storage to check if a user is logged in 
   const token = localStorage.getItem('token');
 
   const visibleSlides = slides.filter(
     slide => !(slide.title === "Join Us!" && token)
   );
 
+  // This useEffect sets a timer so the current visible slide is changed to the next slide every 15 seconds (that's what 15000 relates to)
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % visibleSlides.length);
@@ -62,6 +74,7 @@ export default function Slider() {
     return () => clearInterval(timer);
   }, [visibleSlides.length]);
 
+// This useEffect resets the 
   useEffect(() => {
     if (currentSlide >= visibleSlides.length) {
       setCurrentSlide(0);
