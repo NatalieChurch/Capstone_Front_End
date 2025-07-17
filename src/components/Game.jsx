@@ -121,18 +121,8 @@ async function startGame() {
   setGameOver(false);
 
   try {
-    const shoe = await checkShoe();
-    if (shoe.length < 10) {
       await fetchJson(`${API}/shoe`, { method: "POST" });
       setGameNeedsReset(false);
-    }
-
-    const updatedShoe = await checkShoe();
-    if (updatedShoe.length < 10) {
-      setGameNeedsReset(true);
-      setLoading(false);
-      return;
-    }
 
     setTimeout(async () => {
       const p1 = await fetchJson(`${API}/hand/player`, {
