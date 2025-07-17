@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
-
+// There are 4 slides, each corresponding in order to the sliding banners on the Home page. Imported into the Home component so it shows up there.
 const slides = [
   {
+    // id 1 is the first slide, etc.
     id: 1,
+    // barTitle is the word underneath the progress bar, describes the slide it's attached to
     barTitle: "Welcome",
     title: 'Welcome to Blackjack Academy',
     subtitle: 'Ready To Learn?',
@@ -25,7 +27,7 @@ const slides = [
   },
   {
     id: 3,
-    barTitle: "Get Practice",
+    barTitle: "Practice",
     title: "Don't embarrass yourself at the table",
     subtitle: '',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
@@ -35,7 +37,7 @@ const slides = [
   },
   {
     id: 4,
-    barTitle: "Learn Strategy",
+    barTitle: "Strategy",
     title: "Basic Strategy",
     subtitle: '',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
