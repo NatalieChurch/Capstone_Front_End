@@ -10,7 +10,7 @@ export default function Login({ setToken }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Sending login:", { email, password });
+
     try {
       const response = await fetch("http://localhost:3000/users/login", {
         method: "POST",
@@ -19,7 +19,7 @@ export default function Login({ setToken }) {
       });
 
       const data = await response.json();
-      console.log("Login response data:", data);                 
+                    
       if (!response.ok) {
         setMessage(data.error ? data : "Login failed.");
         return;
