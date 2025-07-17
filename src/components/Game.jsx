@@ -170,11 +170,25 @@ async function startGame() {
 
         if (playerBlackjack) {
           setRevealDealerHole(true);
+          
           if (dealerBlackjack) {
             setMessage("Both have Blackjack — Push");
+            
+            fetch(`${API}/games/increment`, {
+              method: "POST",
+              headers: authHeaders(token),
+              body: JSON.stringify({ stat: "hands_pushed" }),
+            }).catch(err => console.error("Failed to log push stats:", err));
           } else {
             setMessage("Blackjack! You Win");
+           
+            fetch(`${API}/games/increment`, {
+              method: "POST",
+              headers: authHeaders(token),
+              body: JSON.stringify({ stat: "hands_won" }),
+            }).catch(err => console.error("Failed to log win stats:", err));
           }
+          
           setGameStarted(false);
           setGameOver(true);
           setDealerAnimation("Idle");
@@ -182,7 +196,6 @@ async function startGame() {
           return fullDealerHand;
         }
 
-        // If no immediate blackjack resolution, continue game
           setGameStarted(true);
           setTimeout(() => {
           setDealerAnimation("Idle");
@@ -341,6 +354,26 @@ const nextHand = () => {
           } else {
             outcome = "You Lose";
           }
+
+        if (outcome === "You Win") {
+          await fetch(`${API}/games/increment`, {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify({ stat: "hands_won" }),
+          });
+        } else if (outcome === "You Lose") {
+          await fetch(`${API}/games/increment`, {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify({ stat: "hands_lost" }),
+          });
+        } else if (outcome === "You Push") {
+          await fetch(`${API}/games/increment`, {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify({ stat: "hands_pushed" }),
+          });
+        }
 
           return outcome;
         })
