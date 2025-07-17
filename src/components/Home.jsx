@@ -27,8 +27,8 @@ export default function Home() {
             <li><strong>Split Aces and 8s</strong> — always.</li><br />
             <li><strong>Never split</strong> 5s or 10s.</li><br />
             <li><strong>Hit soft 17 (A+6)</strong> unless the dealer shows 3–6 — then double if allowed.</li><br />
-            <h> Basic strategy gives you the best move for any situation, reducing the house edge to under <strong>0.5%</strong> in single-deck games!
-            </h>
+            <h2> Basic strategy gives you the best move for any situation, reducing the house edge to under <strong>0.5%</strong> in single-deck games!
+            </h2>
           </ol>
       </main>
     </>
