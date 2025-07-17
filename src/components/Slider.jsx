@@ -6,49 +6,41 @@ import '../App.css';
 const slides = [
   {
     id: 1,
-    title: 'Welcome',
-    subtitle: 'Ready To Play?',
+    barTitle: "Welcome",
+    title: 'Welcome to Blackjack Academy',
+    subtitle: 'Ready To Become a Master?',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     button: 'Start Playing',
     link: '/game',
   },
   {
     id: 2,
-    title: 'Join Us!',
-    subtitle: 'Register Or Login',
+    barTitle: "Register",
+    title: 'Join Us to Start Learning!',
+    subtitle: 'Create an Account',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
+    content: [],
     button: 'Register',
     link: '/register',
   },
   {
     id: 3,
-    title: 'Basic Rules',
+    barTitle: "Get Practice",
+    title: "Don't embarrass yourself at the table",
     subtitle: '',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
-    content: ["In Blackjack, the goal is to get a hand value as close to 21 as possible without exceeding 21, while also having a higher hand than the dealer's."],
-    list: [
-        <br></br>,
-        "The dealer deals the cards.",
-        "Add up the value of the cards in your hand, and decide to hit, stand, double down, or split",
-        "Ask for tips to learn basic strategy.",
-        "The dealer reveals their hand.",
-        "Determine the winner."
-    ],
+    content: ["New to blackjack? Have an upcoming trip to Vegas planned? Don't look like an amateur at the casino! With Blackjack Academy you can practice with no-stakes single-deck blackjack and get tips on what to do as you play! "],
     button: 'Try It Yourself!',
     link: '/game',
   },
   {
     id: 4,
-    title: "Blackjack?",
+    barTitle: "Learn Strategy",
+    title: "Basic Strategy",
     subtitle: '',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     content:
-      [
-      <br></br>,
-      <br></br>,
-      "If a player's first two cards are an ace and a 10-value card, it's a blackjack and the player wins immediately. The only exception to this rule is if the dealer also hs a blackjack. If this happens the round ends in a tie and all bets are returned.",
-      <br></br>
-    ],
+      ["Blackjack Academy teaches you basic strategy, which is a mathematically proven system for playing blackjack that minimizes the house edge by telling you the statistically best move for every possible hand: hit, stand, split, or double down."],
   },
 ];
 
@@ -64,7 +56,7 @@ export default function Slider() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % visibleSlides.length);
-    }, 5000);
+    }, 20000);
     return () => clearInterval(timer);
   }, [visibleSlides.length]);
 
@@ -147,7 +139,7 @@ export default function Slider() {
                     }}
                   ></span>
                 </span>
-                <span>{`0${index + 1}`}</span> {slide.title}
+                <span>{`0${index + 1}`}</span> {slide.barTitle}
               </label>
             ))}
           </div>
