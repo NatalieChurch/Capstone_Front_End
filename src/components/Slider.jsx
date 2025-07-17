@@ -8,7 +8,7 @@ const slides = [
     id: 1,
     barTitle: "Welcome",
     title: 'Welcome to Blackjack Academy',
-    subtitle: 'Ready To Become a Master?',
+    subtitle: 'Ready To Learn?',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     button: 'Start Playing',
     link: '/game',
