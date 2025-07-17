@@ -1,4 +1,4 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect, useRef } from "react";
 import { getToken, clearToken } from "./Auth";
 import { useNavigate } from "react-router-dom";
 import DealerScene from "./DealerScene";
@@ -56,6 +56,12 @@ export default function Game() {
   const [doubleDownUsed, setDoubleDownUsed] = useState([]);
   const [gameOver, setGameOver] = useState(false);
   const [dealerAnimation, setDealerAnimation] = useState("Idle");
+  
+  // Use ref to always have access to the latest player hands
+  const playerHandsRef = useRef(playerHands);
+  useEffect(() => {
+    playerHandsRef.current = playerHands;
+  }, [playerHands]);
 
   const total = (hand) => {
     let sum = hand.reduce((s, c) => s + c.card_value, 0);
@@ -183,9 +189,6 @@ const hit = async () => {
   }, 1000);
 
   setStrategy(null);
-  setDoubleDownUsed((prev) =>
-    prev.map((used, i) => (i === activeHandIdx ? true : used))
-  );
 
   try {
     const handNum = activeHandIdx + 1;
@@ -230,7 +233,6 @@ const hit = async () => {
     return false;
   }
 };
-  
 const stand = () => nextHand();
 
 async function doubleDown() {
@@ -241,9 +243,8 @@ async function doubleDown() {
   const busted = await hit(); 
   if (busted) return;
 
-  setTimeout(() => {
-    nextHand();
-  }, 300);
+  // In double down, we immediately move to the next hand after taking one card
+  nextHand();
 }
 
 const nextHand = () => {
@@ -271,7 +272,7 @@ const nextHand = () => {
 };
 
   const finishDealerPlay = () => {
-      const allBusted = playerHands.every((hand) => total(hand) > 21);
+      const allBusted = playerHandsRef.current.every((hand) => total(hand) > 21);
       if (allBusted) return;
 
   try {
@@ -309,7 +310,7 @@ const nextHand = () => {
       const dealerTotal = total(finalDealerHand);
 
       const results = await Promise.all(
-        playerHands.map(async (hand) => {
+        playerHandsRef.current.map(async (hand) => {
           const t = total(hand);
           let outcome;
 
