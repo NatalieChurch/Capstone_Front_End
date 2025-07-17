@@ -12,7 +12,7 @@ function NavBar({token, setToken}){
     return(
     <div>
         <nav>
-            <h1> Blackjack </h1>
+            <h1> Blackjack Academy </h1>
             <div>
                 <Link to="/">Home</Link>
                 {token ? (
