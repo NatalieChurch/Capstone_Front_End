@@ -214,9 +214,8 @@ const hit = async () => {
 
       if (allBusted) {
         setRevealDealerHole(true);
-        const dealerTotal = total(dealerHand);
         const results = updatedHands.map(() => "You Lose");
-        setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
+        setMessage(`You Bust | ${results.join(" | ")}`);
         setGameStarted(false);
         setGameOver(true);
       } else {
@@ -260,13 +259,12 @@ const nextHand = () => {
 
   if (isAllBusted(playerHands)) {
     setRevealDealerHole(true);
-    const dealerTotal = total(dealerHand);
     const results = playerHands.map(() => "You Lose");
-    setMessage(`Dealer stands on ${dealerTotal} | ${results.join(" | ")}`);
+    setMessage(`You Bust | ${results.join(" | ")}`);
     setGameStarted(false);
     setGameOver(true);
-    return;
-  }
+  return;
+}
 
   finishDealerPlay();
 };
