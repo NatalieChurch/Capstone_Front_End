@@ -222,6 +222,10 @@ text-align: center;
   color: black;
 }
 
+.results button:hover{
+  background-color: green;
+}
+
 .results{
   font-family: 'Fredoka One', cursive, sans-serif;
   color: #2c3e50;
@@ -277,6 +281,10 @@ text-align: center;
   padding: 5px;
 }
 
+.controls button:hover{
+  background-color: green;
+}
+
 .start_container{
   display: flex;
   flex-direction: column;
@@ -302,6 +310,10 @@ text-align: center;
   width: 80px;
   align-items: center;
   padding: 5px;
+}
+
+.start_controls button:hover{
+  background-color: green;
 }
 
 .card_container {
@@ -376,6 +388,10 @@ text-align: center;
   background-color: white;
   color: black;
   width:150px;
+}
+
+#strategy_button:hover{
+  background-color: green;
 }
 
 .speech_bubble {
