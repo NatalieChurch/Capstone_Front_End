@@ -164,13 +164,43 @@ async function startGame() {
               method: "POST",
               headers: authHeaders(token),
             });
-            setDealerHand((prev) => [...prev, d2]);
+            setDealerHand((prev) => {
+        const fullDealerHand = [...prev, d2];
 
-            setGameStarted(true)
-            setTimeout(() =>{
-            setDealerAnimation("Idle")
-            }, 1000);;
-            setLoading(false);
+        // Check for player and dealer Blackjack
+        const isBlackjack = (hand) => {
+          if (hand.length !== 2) return false;
+          const ranks = hand.map(c => cleanRank(c.rank));
+          const values = hand.map(c => c.card_value);
+          return ranks.includes("A") && values.includes(10);
+        };
+
+        const playerBlackjack = isBlackjack([p1, p2]);
+        const dealerBlackjack = isBlackjack(fullDealerHand);
+
+        if (playerBlackjack) {
+          setRevealDealerHole(true);
+          if (dealerBlackjack) {
+            setMessage("Both have Blackjack — Push");
+          } else {
+            setMessage("Blackjack! You Win");
+          }
+          setGameStarted(false);
+          setGameOver(true);
+          setDealerAnimation("Idle");
+          setLoading(false);
+          return fullDealerHand;
+        }
+
+        // If no immediate blackjack resolution, continue game
+          setGameStarted(true);
+          setTimeout(() => {
+          setDealerAnimation("Idle");
+          }, 1000);
+          setLoading(false);
+
+        return fullDealerHand;
+      });
             
           }, 1000);
         }, 1000);
@@ -420,13 +450,41 @@ async function newHand(){
                 method: "POST",
                 headers: authHeaders(token),
               });
-              setDealerHand((prev) => [...prev, d2]);
+              setDealerHand((prev) => {
+              const fullDealerHand = [...prev, d2];
+
+              const isBlackjack = (hand) => {
+                if (hand.length !== 2) return false;
+                const ranks = hand.map(c => cleanRank(c.rank));
+                const values = hand.map(c => c.card_value);
+                return ranks.includes("A") && values.includes(10);
+              };
+
+              const playerBlackjack = isBlackjack([p1, p2]);
+              const dealerBlackjack = isBlackjack(fullDealerHand);
+
+              if (playerBlackjack) {
+                setRevealDealerHole(true);
+                if (dealerBlackjack) {
+                  setMessage("Both have Blackjack — Push");
+                } else {
+                  setMessage("Blackjack! You Win");
+                }
+                setGameStarted(false);
+                setGameOver(true);
+                setDealerAnimation("Idle");
+                setLoading(false);
+                return fullDealerHand;
+              }
 
               setGameStarted(true);
-              setTimeout(() =>{
-              setDealerAnimation("Idle")
-               }, 1000);;
+              setTimeout(() => {
+                setDealerAnimation("Idle");
+              }, 1000);
               setLoading(false);
+
+              return fullDealerHand;
+            });
             }, 1000);
           }, 1000);
         }, 1000);
