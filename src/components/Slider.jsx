@@ -59,14 +59,16 @@ export default function Slider() {
   const [currentSlide, setCurrentSlide] = useState(0);
   // useNavigate is used to direct the user to a different route when a button is clicked
   const navigate = useNavigate();
-  // gets the token from local storage to check if a user is logged in 
+  // Gets the token from local storage to check if a user is logged in 
   const token = localStorage.getItem('token');
 
+  // If user is currently logged in, the Join Us slide (slide 02) should have a button that redirects to the game rather than the Register component
   const visibleSlides = slides.filter(
     slide => !(slide.title === "Join Us!" && token)
   );
 
-  // This useEffect sets a timer so the current visible slide is changed to the next slide every 15 seconds (that's what 15000 relates to)
+  // This useEffect sets a timer so the current visible slide is automatically changed to the next slide every 15 seconds (that's what 15000 relates to)
+  // Returns back to the beginning after all slides have been progressed through 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % visibleSlides.length);
@@ -74,7 +76,7 @@ export default function Slider() {
     return () => clearInterval(timer);
   }, [visibleSlides.length]);
 
-// This useEffect resets the 
+  // This useEffect resets the current slide if necessary
   useEffect(() => {
     if (currentSlide >= visibleSlides.length) {
       setCurrentSlide(0);
@@ -86,6 +88,8 @@ export default function Slider() {
     <section id="slidesAndProgressBar">
       <div className="content-slider">
         <div className="slider">
+
+          {/* Runs through the visible slides and adds a class of "active" to the current slide */}
           {visibleSlides.map((slide, index) => (
             <div
                 key={slide.id}
@@ -96,10 +100,13 @@ export default function Slider() {
                 }}
             >
               <div className="banner-inner-wrapper">
+                {/* Title of the slide (cursive) */}
                 <h2>{slide.title}</h2>
 
+                {/* Subtitle of the slide (if applicable, shows as bold letters) */}
                 {slide.subtitle && (
                   <h1>
+                    {/* Properly formats subtitle to split and have spans and breaks for clarity/styling */}
                     {slide.subtitle.split('\n').map((line, i) => (
                       <span key={i}>
                         {line}
@@ -109,6 +116,7 @@ export default function Slider() {
                   </h1>
                 )}
 
+                {/* If there is slide content stored as an array, this can render it as multiple paragraphs. If it's a string, it will also be stored as a paragraph, but just one. */}
                 {slide.content &&
                   (Array.isArray(slide.content) ? (
                     slide.content.map((p, i) => <p key={i}>{p}</p>)
@@ -116,6 +124,7 @@ export default function Slider() {
                     <p>{slide.content}</p>
                   ))}
 
+                {/* Makes an ordered list if if a list exists on the sliding banner (was more applicable when one sliding banner listed basic rules). */}
                 {slide.list && (
                   <ol>
                     {slide.list.map((item, i) => (
@@ -124,8 +133,10 @@ export default function Slider() {
                   </ol>
                 )}
 
+                {/* Horizontal line between content/lists and button. Even if one or neither exist, it will show up underneath where content and lists would have been, and above where the button would have been. */}
                 <div className="line" />
 
+                {/* If there's a button, this renders it. Navigates to the route that's slide.link */}
                 {slide.button && slide.link && (slide.title !== "Join Us!" || !token) && (
                   <div className="homepage-button">
                       <button onClick={() => navigate(slide.link)}>
@@ -141,8 +152,10 @@ export default function Slider() {
         {/* Navigation Buttons */}
         <nav>
           <div className="controls">
+            {/* Renders nav bar with buttons that, when clicked, make the current slide the slide that corresponds to the button clicked. */}
             {visibleSlides.map((slide, index) => (
               <label key={slide.id} onClick={() => setCurrentSlide(index)}>
+                {/* Shows progress bar, which slowly fills up with red over 15 seconds, but only for the progress bar that corresponds to the current slide. */}
                 <span className="progressbar">
                   <span
                     className="progressbar-fill"
@@ -154,6 +167,7 @@ export default function Slider() {
                     }}
                   ></span>
                 </span>
+                {/* Shows slide number and barTitle on the nav bar underneath the progressing bars. */}
                 <span>{`0${index + 1}`}</span> {slide.barTitle}
               </label>
             ))}
