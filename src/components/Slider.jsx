@@ -8,7 +8,7 @@ const slides = [
     id: 1,
     barTitle: "Welcome",
     title: 'Welcome to Blackjack Academy',
-    subtitle: 'Ready To Become a Master?',
+    subtitle: 'Ready To Learn?',
     background: '/Lime_and_Dark_Green_Gradient.jpg',
     button: 'Start Playing',
     link: '/game',
@@ -56,7 +56,7 @@ export default function Slider() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % visibleSlides.length);
-    }, 20000);
+    }, 15000);
     return () => clearInterval(timer);
   }, [visibleSlides.length]);
 
@@ -134,7 +134,7 @@ export default function Slider() {
                     style={{
                       animation:
                         index === currentSlide
-                          ? 'progressBarFill 5s linear forwards'
+                          ? 'progressBarFill 15s linear forwards'
                           : 'none',
                     }}
                   ></span>
