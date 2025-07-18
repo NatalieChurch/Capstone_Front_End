@@ -251,6 +251,11 @@ const hit = async () => {
         setMessage(`You Bust | ${results.join(" | ")}`);
         setGameStarted(false);
         setGameOver(true);
+        fetch(`${API}/games/increment`, {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify({ stat: "hands_lost" }),
+          })
       } else {
         setMessage((m) => `${m} Bust. `);
         setActiveHandIdx((idx) => idx + 1);
