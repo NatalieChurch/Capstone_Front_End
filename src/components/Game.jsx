@@ -495,8 +495,21 @@ async function newHand(){
                 setRevealDealerHole(true);
                 if (dealerBlackjack) {
                   setMessage("Both have Blackjack — Push");
+              
+                  fetch(`${API}/games/increment`, {
+              method: "POST",
+              headers: authHeaders(token),
+              body: JSON.stringify({ stat: "hands_pushed" }),
+            }).catch(err => console.error("Failed to log push stats:", err));
+
                 } else {
                   setMessage("Blackjack! You Win");
+              
+              fetch(`${API}/games/increment`, {
+              method: "POST",
+              headers: authHeaders(token),
+              body: JSON.stringify({ stat: "hands_won" }),
+            }).catch(err => console.error("Failed to log win stats:", err));
                 }
                 setGameStarted(false);
                 setGameOver(true);
