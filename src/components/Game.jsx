@@ -573,7 +573,8 @@ async function getStrategy(hand) {
 }
 
 const groq = new Groq({ 
-  apiKey: import.meta.env.VITE_GROQ_API_KEY
+  apiKey: import.meta.env.VITE_GROQ_API_KEY,
+  dangerouslyAllowBrowser: true
 });
 
 async function explainStrategy(hand) {
@@ -699,7 +700,18 @@ async function explainStrategy(hand) {
               <div className="strategy">
                 {strategy && idx === activeHandIdx && (
                   <div className="speech_bubble">
-                  <p className="typing">I recommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
+                  <p className="typing">I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
+                  <br></br>
+                  <button className="explanation_button" onClick={()=>explainStrategy(hand)}>
+                    Learn Why
+                    </button>
+                    {
+                      explanation && (
+                        <div className="explanation">
+                          <p>{explanation}</p>
+                        </div>
+                      )
+                    }
                   </div>
                 )}
                 {idx ===activeHandIdx && (
