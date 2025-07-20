@@ -457,6 +457,7 @@ text-align: center;
   background-color: white;
   color: black;
   width:150px;
+  border: 2px solid black;
 }
 
 .explanation_button:hover{

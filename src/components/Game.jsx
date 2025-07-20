@@ -58,6 +58,7 @@ export default function Game() {
   const [gameOver, setGameOver] = useState(false);
   const [dealerAnimation, setDealerAnimation] = useState("Idle");
   const [explanation, setExplanation] = useState(null)
+  const [generating, setGenerating] = useState(false)
   
   // Use ref to always have access to the latest player hands
   const playerHandsRef = useRef(playerHands);
@@ -578,6 +579,8 @@ const groq = new Groq({
 });
 
 async function explainStrategy(hand) {
+  setGenerating(true)
+
   const handTotal = total(hand);
   const dealerUpcard = dealerHand[1];
   const handType = getHandType(hand);
@@ -595,7 +598,7 @@ async function explainStrategy(hand) {
     .then((chatCompletion) => {
       setExplanation(chatCompletion.choices[0].message.content)
     });
-    
+    setGenerating(false)
 }
 
   useEffect(() => {
@@ -702,8 +705,12 @@ async function explainStrategy(hand) {
                   <div className="speech_bubble">
                   <p className="typing">I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
                   <br></br>
-                  <button className="explanation_button" onClick={()=>explainStrategy(hand)} disabled={explanation}>
-                    Learn Why
+                  <button 
+                    className="explanation_button" 
+                    onClick={()=>explainStrategy(hand)} 
+                    disabled={generating || explanation}
+                  >
+                    {generating? <strong>Generating...</strong> : <strong>Learn Why</strong>}
                     </button>
                     {
                       explanation && (
