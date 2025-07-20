@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { getToken, clearToken } from "./Auth";
 import { useNavigate } from "react-router-dom";
 import DealerScene from "./DealerScene";
+import Groq from 'groq-sdk'
 
 const API = "http://localhost:3000";
 
