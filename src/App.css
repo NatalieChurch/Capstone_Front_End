@@ -473,7 +473,6 @@ text-align: center;
   50% { border-color: transparent }
 }
 
-
 .dealer_section p {
   margin-top: 0.75rem;
 }
@@ -481,6 +480,7 @@ text-align: center;
 .speech_bubble p {
   color: black !important;
 }
+
 
 /* ----------------------------------- Account Styling --------------------------------------*/
 
