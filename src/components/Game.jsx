@@ -587,7 +587,7 @@ async function explainStrategy(hand) {
       messages: [
         {
           role: "user",
-          content: `In single-deck blackjack basic strategy, briefly explain why a player should ${STRATEGY_MAP[strategy]} when the dealer is showing ${dealerUpcard.rank} and the player has a ${handType} ${handTotal}?`,
+          content: `In single-deck blackjack basic strategy, briefly explain why a player should ${STRATEGY_MAP[strategy]} when the dealer is showing ${dealerUpcard.rank} and the player has a ${handType} ${handTotal}? Use the player's chances of busting or winning to explain`,
         },
       ],
       model: "llama-3.3-70b-versatile",
@@ -702,7 +702,7 @@ async function explainStrategy(hand) {
                   <div className="speech_bubble">
                   <p className="typing">I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
                   <br></br>
-                  <button className="explanation_button" onClick={()=>explainStrategy(hand)}>
+                  <button className="explanation_button" onClick={()=>explainStrategy(hand)} disabled={explanation}>
                     Learn Why
                     </button>
                     {
