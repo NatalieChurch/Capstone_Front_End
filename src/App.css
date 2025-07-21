@@ -439,6 +439,31 @@ text-align: center;
   border-right: 2px solid black;
 }
 
+.explanation {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background-color: #f4f4f8;
+  border-left: 4px solid black;
+  border-radius: 6px;
+  max-width: 1500px;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.explanation_button {
+   position: relative;
+  background-color: white;
+  color: black;
+  width:150px;
+  border: 2px solid black;
+}
+
+.explanation_button:hover{
+  background-color: green;
+}
+
 @keyframes typing {
   from { width: 0 }
   to { width: 100% }
@@ -448,7 +473,6 @@ text-align: center;
   50% { border-color: transparent }
 }
 
-
 .dealer_section p {
   margin-top: 0.75rem;
 }
@@ -456,6 +480,7 @@ text-align: center;
 .speech_bubble p {
   color: black !important;
 }
+
 
 /* ----------------------------------- Account Styling --------------------------------------*/
 

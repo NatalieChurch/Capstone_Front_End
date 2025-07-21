@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { getToken, clearToken } from "./Auth";
 import { useNavigate } from "react-router-dom";
 import DealerScene from "./DealerScene";
+import Groq from 'groq-sdk'
 
 const API = "http://localhost:3000";
 
@@ -56,6 +57,8 @@ export default function Game() {
   const [doubleDownUsed, setDoubleDownUsed] = useState([]);
   const [gameOver, setGameOver] = useState(false);
   const [dealerAnimation, setDealerAnimation] = useState("Idle");
+  const [explanation, setExplanation] = useState(null)
+  const [generating, setGenerating] = useState(false)
   
   // Use ref to always have access to the latest player hands
   const playerHandsRef = useRef(playerHands);
@@ -88,6 +91,7 @@ export default function Game() {
     setStrategy(null)
     setDoubleDownUsed([])
     setGameOver(false)
+    setExplanation(null)
   };
 
   const currentHand = () => playerHands[activeHandIdx] || [];
@@ -222,6 +226,7 @@ const hit = async () => {
   }, 1000);
 
   setStrategy(null);
+  setExplanation(null)
 
   try {
     const handNum = activeHandIdx + 1;
@@ -292,6 +297,7 @@ const nextHand = () => {
   if (nextIdx < playerHands.length) {
     setActiveHandIdx(nextIdx);
     setStrategy(null);
+    setExplanation(null)
     return;
   }
 
@@ -406,6 +412,7 @@ const split = async () => {
   if (!canSplit()) return;
   const [first, second] = currentHand();
   setStrategy(null)
+  setExplanation(null)
 
   try {
     const extra1 = await fetchJson(`${API}/hand/player?hand=1`, {
@@ -566,7 +573,33 @@ async function getStrategy(hand) {
   setStrategy(strategy);
 }
 
+const groq = new Groq({ 
+  apiKey: import.meta.env.VITE_GROQ_API_KEY,
+  dangerouslyAllowBrowser: true
+});
 
+async function explainStrategy(hand) {
+  setGenerating(true)
+
+  const handTotal = total(hand);
+  const dealerUpcard = dealerHand[1];
+  const handType = getHandType(hand);
+
+  const completion = await groq.chat.completions
+    .create({
+      messages: [
+        {
+          role: "user",
+          content: `In single-deck blackjack basic strategy, briefly explain why a player should ${STRATEGY_MAP[strategy]} when the dealer is showing ${dealerUpcard.rank} and the player has a ${handType} ${handTotal}? Use the player's chances of busting or winning to explain`,
+        },
+      ],
+      model: "llama-3.3-70b-versatile",
+    })
+    .then((chatCompletion) => {
+      setExplanation(chatCompletion.choices[0].message.content)
+    });
+    setGenerating(false)
+}
 
   useEffect(() => {
     if (!token) navigate("/login");
@@ -670,7 +703,22 @@ async function getStrategy(hand) {
               <div className="strategy">
                 {strategy && idx === activeHandIdx && (
                   <div className="speech_bubble">
-                  <p className="typing">I recommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
+                  <p className="typing">I reccommend you <strong>{STRATEGY_MAP[strategy]}.</strong> </p>
+                  <br></br>
+                  <button 
+                    className="explanation_button" 
+                    onClick={()=>explainStrategy(hand)} 
+                    disabled={generating || explanation}
+                  >
+                    {generating? <strong>Generating...</strong> : <strong>Learn Why</strong>}
+                    </button>
+                    {
+                      explanation && (
+                        <div className="explanation">
+                          <p>{explanation}</p>
+                        </div>
+                      )
+                    }
                   </div>
                 )}
                 {idx ===activeHandIdx && (
